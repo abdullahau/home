@@ -1,0 +1,13 @@
+# TODO: once you've bought a domain and pointed its A/AAAA record at this
+# VPS, comment out the ":80" block below and uncomment this one instead.
+# yourdomain.com {
+#     root * /srv
+#     file_server
+#     encode gzip
+# }
+
+:80 {
+	root * /srv
+	file_server
+	encode gzip
+}

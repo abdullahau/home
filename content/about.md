@@ -6,6 +6,11 @@ I'm Abdullah Mahmood.
 
 <!-- TODO: write a short bio, 2-3 sentences about who you are and what you do. -->
 
+[Download my CV (PDF)](/abdullah-mahmood-cv.pdf)
+
+<!-- TODO: replace static/abdullah-mahmood-cv.pdf with your real CV, keeping
+     the same filename so this link keeps working. -->
+
 ## Experience
 
 <!-- TODO: list your roles, most recent first. Example:

@@ -41,9 +41,9 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
   education, skills, contact). Currently scaffolded with `<!-- TODO -->`
   placeholders — fill in real content before publishing.
 
-Each of `notes` and `projects` has one `example-*.md` page showing the
-expected front matter for that template style — delete those once real
-content exists.
+Each of the four sections has one `example-*.md` page showing the expected
+front matter for that template style — delete those once real content
+exists.
 
 ## Hosting
 
@@ -55,10 +55,21 @@ never grow a "deploy to GitHub Pages" Actions workflow. Instead:
 - It will be pointed at a custom domain once one is purchased —
   `config.toml`'s `base_url` is currently a placeholder
   (`https://TODO-set-your-domain.com`) and must be updated first.
-- Serving mechanism (e.g. Caddy or nginx in front of the `zola build`
-  output in `public/`, plus how deploys land on the VPS — git pull + rebuild,
-  rsync from a laptop, CI, etc.) is not yet decided/implemented. Treat this
-  as an open task, not an assumption to build around.
+- Serving is Caddy running in Docker (chosen over a bare-metal install so the
+  setup is replicable on another host if needed): `deploy/docker-compose.yml`
+  + `deploy/Caddyfile`. Caddy serves the static `public/` build output
+  (bind-mounted read-only) and terminates HTTPS automatically once a real
+  domain is in the Caddyfile — no separate certbot step. Docker itself is
+  installed via apt on the VPS (not brew — it needs systemd/daemon
+  integration brew doesn't provide on Linux).
+- Deploy flow: `git pull && just build` on the VPS regenerates `public/`;
+  Caddy picks up the new files immediately since it's a live bind mount, no
+  container restart needed. Only a Caddyfile edit needs
+  `docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile`.
+- Not yet running — `deploy/` exists but nothing has been started with
+  `docker compose up`. The VPS already runs other services on this box
+  (Tailscale, SSH, a Python dev environment on :8080) — ports 80/443 were
+  confirmed free before adding this.
 
 ## Style
 
