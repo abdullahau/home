@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+  <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}">
+
+  {% if page is defined %}
+    {% set_global meta_title = page.title ~ " · " ~ config.title %}
+    {% set_global meta_description = page.description or config.description %}
+    {% set_global meta_url = config.base_url ~ page.path %}
+    {% set_global meta_type = "article" %}
+  {% elif section is defined and section.title and section.title != config.title %}
+    {% set_global meta_title = section.title ~ " · " ~ config.title %}
+    {% set_global meta_description = section.description or config.description %}
+    {% set_global meta_url = config.base_url ~ section.path %}
+    {% set_global meta_type = "website" %}
+  {% else %}
+    {% set_global meta_title = config.title %}
+    {% set_global meta_description = config.description %}
+    {% set_global meta_url = config.base_url %}
+    {% set_global meta_type = "website" %}
+  {% endif %}
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ meta_title }}">
+  <meta property="og:description" content="{{ meta_description }}">
+  <meta property="og:url" content="{{ meta_url }}">
+  <meta property="og:type" content="{{ meta_type }}">
+  <meta property="og:site_name" content="{{ config.title }}">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@{{ config.extra.twitter }}">
+  <meta name="twitter:title" content="{{ meta_title }}">
+  <meta name="twitter:description" content="{{ meta_description }}">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="alternate" type="application/atom+xml" title="{{ config.title }}" href="/atom.xml">
+  <script>
+    (function() {
+      var stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") {
+        document.documentElement.setAttribute("data-theme", stored);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <a href="/" class="site-title">Abdullah Mahmood<span class="terminal-cursor">█</span></a>
+        <div class="header-top-right">
+          <span class="current-path">{% block path %}~{% endblock path %}</span>
+          <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme">
+            <span class="theme-toggle-icon" aria-hidden="true">◐</span>
+          </button>
+        </div>
+      </div>
+      <nav>
+        <a href="/about/">about</a>
+        <a href="https://github.com/{{ config.extra.github }}">github</a>
+        <a href="https://www.linkedin.com/in/{{ config.extra.linkedin }}/">linkedin</a>
+        <a href="https://x.com/{{ config.extra.twitter }}">twitter</a>
+        <a href="https://bsky.app/profile/{{ config.extra.bluesky }}">bluesky</a>
+        <a href="https://www.instagram.com/{{ config.extra.instagram }}/">instagram</a>
+        <a href="/atom.xml">rss</a>
+      </nav>
+    </header>
+
+    <main>
+      {% block content %}{% endblock content %}
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <span class="footer-copy">&copy; {{ now() | date(format="%Y") }} Abdullah Mahmood</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll("article pre").forEach(function(pre) {
+        if (pre.parentNode.classList.contains("code-wrapper")) return;
+
+        var wrapper = document.createElement("div");
+        wrapper.className = "code-wrapper";
+        pre.parentNode.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+
+        var button = document.createElement("button");
+        button.className = "copy-button";
+        button.textContent = "Copy";
+
+        button.addEventListener("click", function() {
+          var code = pre.querySelector("code") || pre;
+          navigator.clipboard.writeText(code.innerText).then(function() {
+            button.textContent = "Copied";
+            setTimeout(function() { button.textContent = "Copy"; }, 2000);
+          });
+        });
+
+        wrapper.appendChild(button);
+      });
+
+      // Theme toggle
+      var toggle = document.getElementById("theme-toggle");
+      if (toggle) {
+        toggle.addEventListener("click", function() {
+          var current = document.documentElement.getAttribute("data-theme");
+          if (!current) {
+            current = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          var next = current === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          localStorage.setItem("theme", next);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

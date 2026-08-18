@@ -1,0 +1,34 @@
+# TODO: replace with your real domain once you've bought one and pointed it
+# at the VPS. See CLAUDE.md for hosting notes.
+base_url = "https://TODO-set-your-domain.com"
+title = "Abdullah Mahmood"
+description = "Personal site of Abdullah Mahmood"
+compile_sass = true
+build_search_index = true
+generate_feeds = true
+feed_filenames = ["atom.xml", "index.xml"]
+
+[markdown]
+github_alerts = true
+
+[markdown.highlighting]
+theme = "gruvbox-dark-soft"
+
+[extra]
+author = "Abdullah Mahmood"
+email = "abdullah.au@outlook.com"
+github = "abdullahau"
+linkedin = "-abdullah-mahmood-"
+twitter = "abdullahau"
+bluesky = "abdullahmahmood.bsky.social"
+instagram = "abdullahmahmood_"
+
+[search]
+include_title = true
+include_description = true
+include_path = true
+include_content = true
+
+[[taxonomies]]
+name = "tags"
+feed = true

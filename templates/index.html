@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="homepage">
+  <p class="bio">
+    I'm Abdullah Mahmood. <!-- TODO: write a one or two sentence bio here. --> Read my full <a href="/about/">CV and about page</a>.
+  </p>
+
+  {% set work_section = get_section(path="work/_index.md") %}
+  {% if work_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># work</h2>
+      <span class="section-path">~/work</span>
+    </div>
+    <ul class="wiki-list">
+      {% for page in work_section.pages %}
+      <li>
+        <a href="{{ page.path }}" class="wiki-link">
+          <span class="wiki-title">{{ page.title }}</span>
+          {% include "_tags.html" %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% set notes_section = get_section(path="notes/_index.md") %}
+  {% if notes_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># notes</h2>
+      <span class="section-path">~/notes</span>
+    </div>
+    <ul class="post-list">
+      {% for page in notes_section.pages[:5] %}
+      <li>
+        <div>
+          <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
+          {% include "_tags.html" %}
+        </div>
+        {% if page.date %}
+        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% if notes_section.pages | length > 5 %}
+    <a href="/notes/" class="see-all">all notes &rarr;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% set projects_section = get_section(path="projects/_index.md") %}
+  {% if projects_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># projects</h2>
+      <span class="section-path">~/projects</span>
+    </div>
+    <ul class="wiki-list">
+      {% for page in projects_section.pages %}
+      <li>
+        <a href="{{ page.path }}" class="wiki-link">
+          <span class="wiki-title">{{ page.title }}</span>
+          {% include "_tags.html" %}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% set blog_section = get_section(path="blog/_index.md") %}
+  {% if blog_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># blog</h2>
+      <span class="section-path">~/blog</span>
+    </div>
+    <ul class="post-list">
+      {% for page in blog_section.pages[:5] %}
+      <li>
+        <div>
+          <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
+          {% include "_tags.html" %}
+        </div>
+        {% if page.date %}
+        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% if blog_section.pages | length > 5 %}
+    <a href="/blog/" class="see-all">all blog posts &rarr;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

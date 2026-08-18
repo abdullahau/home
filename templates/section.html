@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} · {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description or config.description }}{% endblock description %}
+{% block path %}~{{ section.path | trim_end(pat="/") }}{% endblock path %}
+
+{% block content %}
+<div class="section-page">
+  <div class="section-header">
+    <h1># {{ section.title | lower }}</h1>
+    <span class="section-path">~{{ section.path | trim_end(pat="/") }}</span>
+  </div>
+
+  {% if section.description %}
+  <p class="section-description">{{ section.description }}</p>
+  {% endif %}
+
+  {% if section.pages | length > 0 %}
+  <ul class="post-list">
+    {% for page in section.pages %}
+    <li>
+      <div>
+        <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
+        {% include "_tags.html" %}
+      </div>
+      {% if page.date %}
+      <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p style="color: #a1a1aa; font-size: 0.875rem;">Nothing here yet.</p>
+  {% endif %}
+</div>
+{% endblock content %}
