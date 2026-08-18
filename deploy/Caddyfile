@@ -1,6 +1,8 @@
-# TODO: once you've bought a domain and pointed its A/AAAA record at this
-# VPS, comment out the ":80" block below and uncomment this one instead.
-# yourdomain.com {
+# TODO: once abdullah.diy and abdullah.run's A/AAAA records point at this
+# VPS (check with `dig +short A abdullah.diy`), comment out the ":80"
+# block below and uncomment this one instead. Both domains share this one
+# block since they serve identical content.
+# abdullah.diy, abdullah.run {
 # 	root * /srv
 # 	file_server
 # 	encode gzip

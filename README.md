@@ -125,13 +125,15 @@ docker compose down
 ### Going from bare IP to a real domain
 
 `deploy/Caddyfile` currently serves plain HTTP on `:80` (the VPS's bare IP),
-with a commented-out block for a real domain. Once you've bought a domain
-and pointed its A/AAAA record at this VPS:
+with a commented-out block for `abdullah.diy` and `abdullah.run` (both
+domains share one block since they serve identical content). Once their
+A/AAAA records point at this VPS — check with `dig +short A abdullah.diy`,
+you're ready when it returns this VPS's IP:
 
 1. Update `base_url` in `config.toml`.
 2. In `deploy/Caddyfile`, comment out the `:80` block and uncomment the
    domain block.
 3. Recreate the container: `cd deploy && docker compose down && docker compose up -d`.
 
-Caddy requests and renews the HTTPS certificate automatically the first
-time it serves that domain — no separate certbot step.
+Caddy requests and renews the HTTPS certificate for both domains
+automatically the first time it serves them — no separate certbot step.
