@@ -17,8 +17,7 @@ abdullah.diy, abdullah.run {
 	}
 }
 
-# Fallback: serves plain HTTP on the VPS's bare IP. Kept commented out —
-# uncomment if the domains ever break and you need bare-IP access again.
+# Fallback bare-IP block — uncomment if the domains ever break.
 # :80 {
 # 	root * /srv
 # 	file_server
