@@ -1,26 +1,4 @@
-# TODO: once abdullah.diy and abdullah.run's A/AAAA records point at this
-# VPS (check with `dig +short A abdullah.diy`), comment out the ":80"
-# block below and uncomment this one instead. Both domains share this one
-# block since they serve identical content.
-# abdullah.diy, abdullah.run {
-# 	root * /srv
-# 	file_server
-# 	encode gzip
-#
-# 	# HTML always revalidates; assets get a short cache window (no
-# 	# cache-busting filenames here, so not longer). Matches ellie.wtf.
-# 	@static path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
-# 	@html not path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
-# 	header @static Cache-Control "public, max-age=14400, must-revalidate"
-# 	header @html Cache-Control "public, max-age=0, must-revalidate"
-#
-# 	handle_errors {
-# 		rewrite * /404.html
-# 		file_server
-# 	}
-# }
-
-:80 {
+abdullah.diy, abdullah.run {
 	root * /srv
 	file_server
 	encode gzip
@@ -38,3 +16,21 @@
 		file_server
 	}
 }
+
+# Fallback: serves plain HTTP on the VPS's bare IP. Kept commented out —
+# uncomment if the domains ever break and you need bare-IP access again.
+# :80 {
+# 	root * /srv
+# 	file_server
+# 	encode gzip
+#
+# 	@static path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
+# 	@html not path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
+# 	header @static Cache-Control "public, max-age=14400, must-revalidate"
+# 	header @html Cache-Control "public, max-age=0, must-revalidate"
+#
+# 	handle_errors {
+# 		rewrite * /404.html
+# 		file_server
+# 	}
+# }

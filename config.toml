@@ -1,6 +1,6 @@
-# TODO: replace with your real domain once you've bought one and pointed it
-# at the VPS. See CLAUDE.md for hosting notes.
-base_url = "https://TODO-set-your-domain.com"
+# abdullah.run also serves this site identically; this is just the
+# canonical one used in feeds/sitemap. See CLAUDE.md for hosting notes.
+base_url = "https://abdullah.diy"
 title = "Abdullah Mahmood"
 description = "Personal site of Abdullah Mahmood"
 compile_sass = true
