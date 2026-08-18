@@ -143,6 +143,7 @@ header {
 
   nav {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     margin-top: 0.25rem;
 
@@ -180,6 +181,29 @@ main {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    gap: 2.5rem;
+  }
+
+  .main-col {
+    flex: 2;
+  }
+
+  .side-col {
+    flex: 1;
+    display: none;
+
+    @media (min-width: 1024px) {
+      display: block;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 0.25rem;
+    }
+  }
 
   .bio {
     font-size: 1rem;
@@ -717,12 +741,8 @@ footer {
   }
 }
 
-// Dark mode
-//
-// Defined as a mixin so the same rules can apply both automatically
-// (system prefers dark, no manual override) and on demand (manual
-// override via the theme toggle button), without tripling the color
-// declarations.
+// Dark mode — a mixin so both the auto (system) and manual-override
+// cases below can share the same rules.
 @mixin dark-theme {
   body {
     background: #18181b;
@@ -964,16 +984,14 @@ footer {
   }
 }
 
-// Applies automatically when the OS/browser prefers dark, unless the
-// user has manually overridden to light via the theme toggle.
+// System dark preference, unless manually overridden to light.
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]) {
     @include dark-theme;
   }
 }
 
-// Applies when the user has manually overridden to dark via the theme
-// toggle, regardless of system preference.
+// Manual override to dark, regardless of system preference.
 html[data-theme="dark"] {
   @include dark-theme;
 }

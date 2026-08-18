@@ -53,9 +53,17 @@ Runs `build.sh`, which:
    `work`/`projects` pages, read by `templates/wiki-page.html` to show an
    "updated" date without you having to maintain it by hand. Gitignored,
    rebuilt every time — never edit it directly.
-2. Runs `zola build`, producing the static site in `public/`.
+2. Builds with Zola into a staging directory, then `rsync --delete`s the
+   result into `public/`, instead of letting `zola build` delete and
+   recreate `public/` itself. That matters once Caddy is running: its
+   Docker container bind-mounts `public/`, and swapping the directory out
+   (rather than just its contents) breaks that bind mount out from under
+   the running container.
 
-`just clean` removes both `public/` and the generated git-dates file.
+`just clean` removes both `public/` and the generated git-dates file. Don't
+run it while the Caddy container is up — it deletes `public/` outright,
+which breaks the bind mount the same way a plain `zola build` would. If you
+do, recreate the container: `cd deploy && docker compose down && docker compose up -d`.
 
 ## Deploy
 
@@ -63,6 +71,16 @@ The site is served from this VPS by [Caddy](https://caddyserver.com/)
 running in Docker (`deploy/docker-compose.yml` + `deploy/Caddyfile`) —
 Docker so the whole setup is portable to another host if needed. Caddy only
 serves the static `public/` folder; it has no idea Zola exists.
+
+The Caddyfile sets `Cache-Control` differently for HTML vs. static assets
+(CSS, images, the CV PDF), matching what ellie.wtf actually does in
+production: HTML always revalidates (`max-age=0, must-revalidate`) so a
+deploy is visible immediately, while static assets get a 4-hour cache
+window before they revalidate too — since none of them have cache-busting
+filenames, a much longer window would risk showing stale CSS/images after
+a deploy. Worth knowing if an HTML change ever "doesn't show up" until a
+hard refresh, though asset changes should now show up within 4 hours even
+without one.
 
 **Bring the server up** (from the repo root):
 
@@ -85,8 +103,17 @@ container — Caddy picks up the new files immediately, no restart needed.
 block to a real domain once one is bought):
 
 ```
-docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile
+cd deploy
+docker compose down
+docker compose up -d
 ```
+
+Recreate the container rather than `caddy reload`. If you ran
+`caddy fmt --overwrite` on the Caddyfile (recommended — keeps it tab-indented
+the way Caddy expects), that rewrites the file via an atomic rename, which
+leaves an already-running container's bind mount pointing at the old,
+now-deleted file. `caddy reload` alone won't pick up the change in that
+case; recreating the container will.
 
 **Stop the server:**
 
@@ -104,7 +131,7 @@ and pointed its A/AAAA record at this VPS:
 1. Update `base_url` in `config.toml`.
 2. In `deploy/Caddyfile`, comment out the `:80` block and uncomment the
    domain block.
-3. Reload: `docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile`.
+3. Recreate the container: `cd deploy && docker compose down && docker compose up -d`.
 
 Caddy requests and renews the HTTPS certificate automatically the first
 time it serves that domain — no separate certbot step.

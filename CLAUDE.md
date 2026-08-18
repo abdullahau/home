@@ -19,7 +19,12 @@ Common commands (via `justfile`):
 
 - `just build` — runs `./build.sh`, which regenerates
   `content/_git-dates.json` (last-git-commit dates for `work`/`projects`
-  pages, read by `templates/wiki-page.html`) and then runs `zola build`.
+  pages, read by `templates/wiki-page.html`), builds with Zola into a
+  staging directory, then `rsync --delete`s the result into `public/`
+  instead of letting `zola build` replace that directory outright — Caddy's
+  Docker container bind-mounts `public/`, and swapping the directory (vs.
+  just its contents) breaks that mount out from under the running
+  container.
 - `just serve` — build, then `zola serve` for local live-reload preview.
 - `just clean` — removes `public/` and the generated git-dates file.
 
@@ -62,6 +67,23 @@ never grow a "deploy to GitHub Pages" Actions workflow. Instead:
   domain is in the Caddyfile — no separate certbot step. Docker itself is
   installed via apt on the VPS (not brew — it needs systemd/daemon
   integration brew doesn't provide on Linux).
+- The Caddyfile sets `Cache-Control` per response type, matching what
+  ellie.wtf does in production (checked her live headers directly): HTML
+  gets `public, max-age=0, must-revalidate` (always revalidate — a deploy
+  is visible immediately), static assets get `public, max-age=14400,
+  must-revalidate` (a 4-hour window before revalidating). A blanket
+  `no-cache` everywhere was the first attempt — it works, but forces a
+  revalidation round trip on every asset on every load forever, which is
+  the wrong trade for files like the CV PDF that rarely change. Ran into
+  the staleness problem directly once already: a CSS fix looked broken
+  until a hard refresh, before either of these existed.
+- Editing `deploy/Caddyfile` with `caddy fmt --overwrite` (via a throwaway
+  `docker run`) swaps the file via an atomic rename, which leaves an
+  already-running container's bind mount pointing at the stale old inode —
+  same failure mode as the `public/` rebuild issue described under
+  Tooling above. After formatting the
+  Caddyfile, recreate the container (`docker compose down && up -d`), don't
+  just `caddy reload`.
 - Deploy flow: `git pull && just build` on the VPS regenerates `public/`;
   Caddy picks up the new files immediately since it's a live bind mount, no
   container restart needed. Only a Caddyfile edit needs

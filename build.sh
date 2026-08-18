@@ -24,4 +24,10 @@ done
 json="$json }"
 echo "$json" > content/_git-dates.json
 
-zola build "$@"
+# Stage then rsync into public/ — replacing the directory outright would
+# break Caddy's bind mount on it.
+rm -rf public.new
+zola build -o public.new "$@"
+mkdir -p public
+rsync -a --delete public.new/ public/
+rm -rf public.new
