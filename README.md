@@ -1,14 +1,16 @@
 # Abdullah Mahmood — Personal Site
 
-Static site built with [Zola](https://www.getzola.org/). Live at
+Static site built with [Zola](https://www.getzola.org/) and theme inspired
+by Ellie Huxtable's [page](https://ellie.wtf/). Live at
 [abdullah.diy](https://abdullah.diy) / [abdullah.run](https://abdullah.run).
 
 Content lives in six sections — `notes`, `projects`, `blog`, `work`,
-`library`, `travel` — plus a top-level `/about` page. See `CLAUDE.md` for
-how content, templates, and hosting are organized in more depth than this
-file covers.
+`library`, `travel` — plus a top-level `/about` page.
 
 ## Setup
+
+Install [Zola](https://www.getzola.org/) and [`just`](https://just.systems/)
+— any package manager works, e.g. with Homebrew:
 
 ```
 brew install zola just
@@ -45,7 +47,8 @@ the Caddy container is up (see Deploy).
 ## Deploy
 
 Caddy, running in Docker (`deploy/`), serves `public/` at the two domains
-above.
+above. It sends `Cache-Control: max-age=0` for HTML (always fresh) and a
+4-hour cache for static assets like CSS and images before they revalidate.
 
 **First time, bring the server up:**
 
@@ -65,9 +68,7 @@ docker compose up -d
 ```
 
 Always recreate the container after a build, not just restart/reload —
-the bind mount to `public/` can otherwise end up stale. See `CLAUDE.md`
-for why, plus other Caddy/Docker gotchas (Caddyfile edits, Cloudflare's
-separate edge cache, etc.).
+the bind mount to `public/` can otherwise end up stale.
 
 **Stop the server:**
 
