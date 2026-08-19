@@ -18,8 +18,8 @@ brew install zola
 Common commands (via `justfile`):
 
 - `just build` — runs `./build.sh`, which regenerates
-  `content/_git-dates.json` (last-git-commit dates for `work`/`projects`
-  pages, read by `templates/wiki-page.html`), builds with Zola into a
+  `content/_git-dates.json` (last-git-commit dates for `projects` pages,
+  read by `templates/wiki-page.html`), builds with Zola into a
   staging directory, then `rsync --delete`s the result into `public/`
   instead of letting `zola build` replace that directory outright — Caddy's
   Docker container bind-mounts `public/`, and swapping the directory (vs.
@@ -33,22 +33,102 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
 
 ## Content structure
 
-- `content/work/` — case studies / professional work highlights. Wiki-style
-  section (`templates/wiki-section.html` / `wiki-page.html`): title +
-  `description` + tags, no post date shown on the list.
-- `content/notes/` — short technical notes. Date-ordered
+- `content/work/` — templates and walkthroughs for things Abdullah does at
+  his day job. Date-ordered, same template as `notes`/`blog`
   (`templates/section.html` / `page.html`).
-- `content/projects/` — personal projects. Same wiki-style template as
-  `work`.
-- `content/blog/` — longer-form writing. Same date-ordered template as
-  `notes`.
+- `content/notes/` — short, informal technical notes. Date-ordered, same
+  template as `work`/`blog`.
+- `content/projects/` — personal projects. The one section still
+  wiki-style (`templates/wiki-section.html` / `wiki-page.html`): title +
+  `description` + tags, no post date on the list — shows an `updated`
+  date (git commit date, see `_wiki-updated.html`) instead, since a
+  project is a living page, not a dated post.
+- `content/blog/` — longer-form writing, work or non-work. Same
+  date-ordered template as `notes`/`work`.
+- `content/library/` — reading/watch list (`library-section.html` /
+  `library-page.html`). Each entry is a page bundle (its own folder with
+  `index.md`) with `extra.type` ("Book", "Article", "Video", "Movie", ...)
+  prefixed onto the title, `description` doubling as author/creator, and
+  `extra.link` to the original source. `extra.thumbnail` shows up next to
+  the entry on the homepage and `/library/`, and again as a heading image
+  on the entry's own page (between the meta line and the note/comment
+  body) — leave it unset and the entry just renders as text, no image
+  anywhere. `scripts/fetch-thumbnail.py` can pull one from the entry's
+  `link` (its `og:image`/`twitter:image`) instead of adding one by hand,
+  optionally converting it to WebP/AVIF via ImageMagick
+  (`--convert avif --quality 50`) — worth doing for anything ImageMagick
+  didn't already shrink, `og:image`s are often needlessly large.
+- `content/travel/` — trip write-ups (`travel-section.html`, pages use the
+  default `page.html`). Same page-bundle + optional `extra.thumbnail`
+  pattern as `library`, plus in-post photos. `library` and `travel` are the
+  only sections with thumbnails, and share one `_thumb-list.html`
+  homepage/list partial for that reason — everything else still uses the
+  plain `post-list`/`wiki-list` styling.
 - `content/about.md` — top-level page (About + CV: bio, experience,
   education, skills, contact). Currently scaffolded with `<!-- TODO -->`
   placeholders — fill in real content before publishing.
 
-Each of the four sections has one `example-*.md` page showing the expected
-front matter for that template style — delete those once real content
-exists.
+Each section has one `example-*` page (or `example-entry/` for the two
+page-bundle sections) showing the expected front matter for that template
+style — delete those once real content exists.
+
+Homepage section order: `notes`, `projects`, `blog`, `work`, `library`,
+`travel` (`templates/index.html`).
+
+### Images (library/travel)
+
+`.article-thumb` (the library detail page's heading image) does not crop:
+`max-width: 100%; max-height: 20rem; width: auto; height: auto;` shrinks
+the image to fit within that box while keeping its original aspect ratio.
+A wide `og:image` still renders near full width (its natural width at
+20rem tall exceeds the column, so `max-width` becomes the binding
+constraint); a portrait book cover renders narrower, at a modest width,
+but with nothing cropped off — no lost title text or author name. The
+earlier approach (`width: 100%` + `object-fit: cover`) was tried first and
+rejected: for a ~2:3 portrait cover in a ~2.8:1 wide box, `cover` would
+have kept only the middle ~24% of the image vertically.
+
+`extra.thumbnail`, and any in-post image in a `travel` entry, can be either:
+
+- a bare filename (`cover.jpg`) — resolved as a page-bundle image colocated
+  with that entry's `index.md`. Simple, but committed to git.
+- an absolute path starting with `/` (e.g. `/media/library/dune/cover.jpg`)
+  — used as-is, unchanged. This is the recommended one.
+
+`media/` (repo root, gitignored) is for exactly this: images that live only
+on the VPS, never committed. `deploy/docker-compose.yml` bind-mounts it and
+`deploy/Caddyfile` serves it at `/media/...`, mirroring the `content/`
+layout (`media/travel/sri-lanka/temple.jpg` → `/media/travel/sri-lanka/temple.jpg`).
+Zola/git never touch it. This matters for `travel` especially — real trip
+photos add up fast, and git never shrinks binary history without a
+rewrite. `scripts/fetch-thumbnail.py` already saves into `media/`.
+
+Cloudflare (free plan, proxying both domains) is live for fast image
+delivery — nameservers switched at GoDaddy to Cloudflare's.
+
+**This adds a real CDN cache in front of the origin, separate from
+anything in this repo or on the VPS.** After a deploy, don't trust what
+you see in a browser until you know which cache you're looking at:
+recreating the Caddy container only fixes the VPS-side bind-mount
+staleness described above — it does nothing for Cloudflare's edge cache,
+which can keep serving a stale `style.css`/etc. for up to 4 hours
+(`max-age=14400`) per edge location, independently per domain. A plain
+browser hard-refresh does not clear it either — only Cloudflare-side
+action does: **Caching → Configuration → Purge Everything** in the
+dashboard, or toggle **Development Mode** on (bypasses the edge cache
+entirely for 3 hours) while actively iterating on styles, as Abdullah did
+during this session. Confirmed by diffing `curl`'s response for the same
+file on both domains and seeing two different (both stale) versions.
+
+### Tags
+
+`templates/_tags.html` links each tag with `get_taxonomy_url(kind="tags",
+term=tag)`, not a hand-built `/tags/{{ tag }}/` — Zola slugifies tag names
+for the actual `/tags/...` URLs (`"Art & Culture"` → `art-culture`) but a
+raw front-matter tag string isn't slugified, so hand-building the link
+404s for any tag with spaces/punctuation/uppercase. Always go through
+`get_taxonomy_url`/`get_taxonomy_term` for tag links, never build `/tags/`
+paths manually.
 
 ## Hosting
 
@@ -56,10 +136,9 @@ exists.
 plan and has already used up his Pages allowance there, so this repo must
 never grow a "deploy to GitHub Pages" Actions workflow. Instead:
 
-- The site is built and served from Abdullah's own VPS.
-- It will be pointed at a custom domain once one is purchased —
-  `config.toml`'s `base_url` is currently a placeholder
-  (`https://TODO-set-your-domain.com`) and must be updated first.
+- The site is built and served from Abdullah's own VPS, live at
+  `abdullah.diy` and `abdullah.run` (identical content, `abdullah.diy` is
+  the canonical `base_url`). Both domains share one Caddyfile block.
 - Serving is Caddy running in Docker (chosen over a bare-metal install so the
   setup is replicable on another host if needed): `deploy/docker-compose.yml`
   + `deploy/Caddyfile`. Caddy serves the static `public/` build output
@@ -85,13 +164,26 @@ never grow a "deploy to GitHub Pages" Actions workflow. Instead:
   Caddyfile, recreate the container (`docker compose down && up -d`), don't
   just `caddy reload`.
 - Deploy flow: `git pull && just build` on the VPS regenerates `public/`;
-  Caddy picks up the new files immediately since it's a live bind mount, no
-  container restart needed. Only a Caddyfile edit needs
-  `docker compose exec caddy caddy reload --config /etc/caddy/Caddyfile`.
-- Not yet running — `deploy/` exists but nothing has been started with
-  `docker compose up`. The VPS already runs other services on this box
-  (Tailscale, SSH, a Python dev environment on :8080) — ports 80/443 were
-  confirmed free before adding this.
+  Caddy usually picks up the new files immediately since it's a live bind
+  mount, no container restart needed — but a build that adds a brand-new
+  top-level content section (not just edits to existing pages) has, in
+  practice, sometimes left the running container's view of `public/` stale
+  anyway. If a deploy 404s on pages that should exist, `docker compose
+  down && docker compose up -d` fixes it — safe to run after every deploy
+  if in doubt. A Caddyfile or `docker-compose.yml` edit (e.g. the `media/`
+  mount) always needs this too; `caddy reload` alone isn't enough for
+  either of those two files.
+- `/media/*` is routed (via `handle_path` in the Caddyfile) to the `media/`
+  bind mount described under Content structure above, separately from the
+  `public/` one.
+- The VPS already runs other services on this box (Tailscale, SSH, a Python
+  dev environment on :8080) — ports 80/443 were confirmed free before
+  adding this.
+- If the site ever 404s on *everything* (not just one page) right after a
+  `docker compose down`/`up`, check `ls -la public/` on the VPS host: if
+  it's owned by `root` and empty, Docker auto-created it because the bind
+  mount source didn't exist at that moment. Fix: `sudo rm -rf public &&
+  just build`, then recreate the container.
 
 ## Style
 

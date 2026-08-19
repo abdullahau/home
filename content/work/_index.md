@@ -1,9 +1,7 @@
 +++
 title = "Work"
 sort_by = "date"
-template = "wiki-section.html"
-page_template = "wiki-page.html"
-description = "Case studies and highlights from my professional work."
+description = "Case studies, templates, and walkthroughs from my professional work and day job."
 
 [extra]
 +++

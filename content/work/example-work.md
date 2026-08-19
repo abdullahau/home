@@ -1,15 +1,15 @@
 +++
-title = "Example work"
+title = "Example work post"
 date = 2026-01-01
-description = "One-line summary shown in the work list."
 
 [taxonomies]
 tags = ["example"]
 +++
 
-This is an example work / case-study page. Delete it once you have real
-entries.
+This is an example work post. Delete it once you have real ones.
 
-Work pages use the same wiki-style template as projects: no post date is
-shown on the list page, just the title, `description`, and tags. The `date`
-field is still used for `sort_by = "date"` ordering.
+`work` is date-ordered, same template as `notes` and `blog`
+(`sort_by = "date"`, newest first) — it's for templates and walkthroughs
+for things you do at your day job, as opposed to `notes` (short, informal)
+or `blog` (longer-form, work or non-work). `projects` is the one section
+that's still wiki-style (no post date shown, an "updated" date instead).

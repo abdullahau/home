@@ -1,0 +1,29 @@
+{# Expects `pages` in scope: a list of pages, optionally with
+   `extra.thumbnail` and `extra.type`. `thumbnail` is either a bare
+   filename colocated with the page, or an absolute path/URL (e.g.
+   /media/... — see CLAUDE.md) used as-is. #}
+<ul class="thumb-list">
+  {% for page in pages %}
+  <li>
+    {% if page.extra.thumbnail %}
+    {% if page.extra.thumbnail[0] == "/" %}
+    <img class="thumb-img" src="{{ page.extra.thumbnail }}" alt="" />
+    {% else %}
+    <img class="thumb-img" src="{{ page.path }}{{ page.extra.thumbnail }}" alt="" />
+    {% endif %}
+    {% endif %}
+    <div class="thumb-body">
+      <div class="thumb-row">
+        <a href="{{ page.path }}" class="thumb-title">{% if page.extra.type %}{{ page.extra.type }}: {% endif %}{{ page.title }}</a>
+        {% if page.date %}
+        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
+        {% endif %}
+      </div>
+      {% if page.description %}
+      <span class="thumb-desc">{{ page.description }}</span>
+      {% endif %}
+      {% include "_tags.html" %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>

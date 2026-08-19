@@ -10,6 +10,13 @@ abdullah.diy, abdullah.run {
 	header @static Cache-Control "public, max-age=14400, must-revalidate"
 	header @html Cache-Control "public, max-age=0, must-revalidate"
 
+	# Images/etc that live only on the VPS, outside the git repo — see
+	# CLAUDE.md. /media/travel/some-trip/photo.jpg -> media/travel/some-trip/photo.jpg
+	handle_path /media/* {
+		root * /media
+		file_server
+	}
+
 	# Serve the styled 404 page while keeping the real status code.
 	handle_errors {
 		rewrite * /404.html
@@ -27,6 +34,11 @@ abdullah.diy, abdullah.run {
 # 	@html not path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
 # 	header @static Cache-Control "public, max-age=14400, must-revalidate"
 # 	header @html Cache-Control "public, max-age=0, must-revalidate"
+#
+# 	handle_path /media/* {
+# 		root * /media
+# 		file_server
+# 	}
 #
 # 	handle_errors {
 # 		rewrite * /404.html

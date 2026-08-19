@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} · {{ config.title }}{% endblock title %}
+{% block description %}{{ page.description or config.description }}{% endblock description %}
+
+{% block path %}~{{ page.path | trim_end(pat="/") }}{% endblock path %}
+
+{% block content %}
+<article>
+  <h1 class="article-title">{% if page.extra.type %}{{ page.extra.type }}: {% endif %}{{ page.title }}</h1>
+  {% if page.description %}
+  <div class="byline">{{ page.description }}</div>
+  {% endif %}
+  <div class="post-meta">
+    {% if page.date %}
+    <span>{{ page.date | date(format="%b %d, %Y") }}</span>
+    {% endif %}
+    {% include "_tags.html" %}
+  </div>
+
+  {% if page.extra.link %}
+  <div class="source-line">source &rarr; <a href="{{ page.extra.link }}">{{ page.extra.link }}</a></div>
+  {% endif %}
+
+  {% if page.extra.thumbnail %}
+  {% if page.extra.thumbnail[0] == "/" %}
+  <img class="article-thumb" src="{{ page.extra.thumbnail }}" alt="" />
+  {% else %}
+  <img class="article-thumb" src="{{ page.path }}{{ page.extra.thumbnail }}" alt="" />
+  {% endif %}
+  {% endif %}
+
+  <div class="content">
+    {{ page.content | safe }}
+  </div>
+</article>
+{% endblock content %}

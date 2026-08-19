@@ -1,31 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% set git_dates = load_data(path="_git-dates.json", required=false) %}
 <div class="homepage">
   <div class="main-col">
   <p class="bio">
     I'm Abdullah Mahmood. <!-- TODO: write a one or two sentence bio here. --> Read my full <a href="/about/">CV and about page</a>.
   </p>
-
-  {% set work_section = get_section(path="work/_index.md") %}
-  {% if work_section.pages | length > 0 %}
-  <div style="margin-bottom: 2rem;">
-    <div class="section-header">
-      <h2># work</h2>
-      <span class="section-path">~/work</span>
-    </div>
-    <ul class="wiki-list">
-      {% for page in work_section.pages %}
-      <li>
-        <a href="{{ page.path }}" class="wiki-link">
-          <span class="wiki-title">{{ page.title }}</span>
-          {% include "_tags.html" %}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
 
   {% set notes_section = get_section(path="notes/_index.md") %}
   {% if notes_section.pages | length > 0 %}
@@ -63,10 +44,13 @@
     <ul class="wiki-list">
       {% for page in projects_section.pages %}
       <li>
-        <a href="{{ page.path }}" class="wiki-link">
-          <span class="wiki-title">{{ page.title }}</span>
-          {% include "_tags.html" %}
-        </a>
+        <div class="wiki-row">
+          <span class="wiki-link">
+            <a href="{{ page.path }}" class="wiki-title">{{ page.title }}</a>
+            {% include "_tags.html" %}
+          </span>
+          {% include "_wiki-updated.html" %}
+        </div>
       </li>
       {% endfor %}
     </ul>
@@ -95,6 +79,62 @@
     </ul>
     {% if blog_section.pages | length > 5 %}
     <a href="/blog/" class="see-all">all blog posts &rarr;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% set work_section = get_section(path="work/_index.md") %}
+  {% if work_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># work</h2>
+      <span class="section-path">~/work</span>
+    </div>
+    <ul class="post-list">
+      {% for page in work_section.pages[:5] %}
+      <li>
+        <div>
+          <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
+          {% include "_tags.html" %}
+        </div>
+        {% if page.date %}
+        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% if work_section.pages | length > 5 %}
+    <a href="/work/" class="see-all">all work posts &rarr;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% set library_section = get_section(path="library/_index.md") %}
+  {% if library_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># library</h2>
+      <span class="section-path">~/library</span>
+    </div>
+    {% set pages = library_section.pages[:5] %}
+    {% include "_thumb-list.html" %}
+    {% if library_section.pages | length > 5 %}
+    <a href="/library/" class="see-all">all library entries &rarr;</a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% set travel_section = get_section(path="travel/_index.md") %}
+  {% if travel_section.pages | length > 0 %}
+  <div style="margin-bottom: 2rem;">
+    <div class="section-header">
+      <h2># travel</h2>
+      <span class="section-path">~/travel</span>
+    </div>
+    {% set pages = travel_section.pages[:5] %}
+    {% include "_thumb-list.html" %}
+    {% if travel_section.pages | length > 5 %}
+    <a href="/travel/" class="see-all">all travel posts &rarr;</a>
     {% endif %}
   </div>
   {% endif %}

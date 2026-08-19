@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 # Generate git-based "updated" dates for wiki pages
 json="{"
 first=true
-for section in work projects; do
+for section in projects; do
   for file in content/$section/*.md; do
     [ "$(basename "$file")" = "_index.md" ] && continue
     [ ! -f "$file" ] && continue

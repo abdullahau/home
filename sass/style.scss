@@ -276,13 +276,16 @@ main {
     }
   }
 
-  .post-date {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 0.8rem;
-    color: #a1a1aa;
-    white-space: nowrap;
-    font-variant-numeric: tabular-nums;
-  }
+}
+
+// Shared with .thumb-list (library/travel) — not nested, so it applies
+// to both.
+.post-date {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  color: #a1a1aa;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .see-all {
@@ -334,6 +337,13 @@ article {
     }
   }
 
+  .byline {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1rem;
+    color: #a1a1aa;
+    margin-bottom: 0.5rem;
+  }
+
   .post-meta {
     display: flex;
     gap: 0.75rem;
@@ -341,6 +351,37 @@ article {
     font-family: "JetBrains Mono", monospace;
     font-size: 1rem;
     color: #a1a1aa;
+    margin-bottom: 2rem;
+  }
+
+  .source-line {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.875rem;
+    color: #a1a1aa;
+    margin-bottom: 2rem;
+    overflow-wrap: anywhere;
+
+    a {
+      color: #a1a1aa;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #52525b;
+      }
+    }
+  }
+
+  .article-thumb {
+    display: block;
+    max-width: 100%;
+    height: 20rem;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
     margin-bottom: 2rem;
   }
 
@@ -576,17 +617,33 @@ article {
     }
   }
 
+  .wiki-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
   .wiki-link {
+    min-width: 0;
+  }
+
+  .wiki-title {
     color: #3f3f46;
     text-decoration: none;
     transition: color 0.2s;
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
 
     &:hover {
       color: #18181b;
     }
+  }
+
+  .wiki-updated {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    color: #a1a1aa;
+    font-style: normal;
+    white-space: nowrap;
   }
 
   .wiki-desc {
@@ -606,6 +663,65 @@ article {
 
   &::after {
     content: none;
+  }
+}
+
+// Thumb list (for library, travel — like post-list, plus an optional
+// colocated thumbnail image on entries that have one)
+.thumb-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+
+  li {
+    display: flex;
+    gap: 0.75rem;
+    border-left: 2px solid #e4e4e7;
+    padding: 0.4rem 0 0.4rem 0.75rem;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-left-color: #a1a1aa;
+    }
+  }
+
+  .thumb-img {
+    width: 3.5rem;
+    height: 3.5rem;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 0.25rem;
+  }
+
+  .thumb-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .thumb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .thumb-title {
+    color: #3f3f46;
+    transition: color 0.2s;
+
+    &:hover {
+      color: #18181b;
+    }
+  }
+
+  .thumb-desc {
+    display: block;
+    font-size: 0.8rem;
+    color: #a1a1aa;
+    margin-top: 0.15rem;
   }
 }
 
@@ -823,10 +939,10 @@ footer {
         color: #fafafa;
       }
     }
+  }
 
-    .post-date {
-      color: #71717a;
-    }
+  .post-date {
+    color: #71717a;
   }
 
   .see-all {
@@ -854,8 +970,24 @@ footer {
       color: #e4e4e7;
     }
 
+    .byline {
+      color: #71717a;
+    }
+
     .post-meta {
       color: #71717a;
+    }
+
+    .source-line {
+      color: #71717a;
+
+      a {
+        color: #71717a;
+
+        &:hover {
+          color: #a1a1aa;
+        }
+      }
     }
 
     .content {
@@ -916,7 +1048,7 @@ footer {
       }
     }
 
-    .wiki-link {
+    .wiki-title {
       color: #d4d4d8;
 
       &:hover {
@@ -924,7 +1056,33 @@ footer {
       }
     }
 
+    .wiki-updated {
+      color: #71717a;
+    }
+
     .wiki-desc {
+      color: #71717a;
+    }
+  }
+
+  .thumb-list {
+    li {
+      border-left-color: #3f3f46;
+
+      &:hover {
+        border-left-color: #71717a;
+      }
+    }
+
+    .thumb-title {
+      color: #d4d4d8;
+
+      &:hover {
+        color: #fafafa;
+      }
+    }
+
+    .thumb-desc {
       color: #71717a;
     }
   }

@@ -16,23 +16,8 @@
   {% endif %}
 
   {% if section.pages | length > 0 %}
-  {% set git_dates = load_data(path="_git-dates.json", required=false) %}
-  <ul class="wiki-list">
-    {% for page in section.pages %}
-    <li>
-      <div class="wiki-row">
-        <span class="wiki-link">
-          <a href="{{ page.path }}" class="wiki-title">{{ page.title }}</a>
-          {% include "_tags.html" %}
-        </span>
-        {% include "_wiki-updated.html" %}
-      </div>
-      {% if page.description %}
-      <span class="wiki-desc">{{ page.description }}</span>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
+  {% set pages = section.pages %}
+  {% include "_thumb-list.html" %}
   {% else %}
   <p style="color: #a1a1aa; font-size: 0.875rem;">Nothing here yet.</p>
   {% endif %}
