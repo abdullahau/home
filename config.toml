@@ -18,9 +18,9 @@ author = "Abdullah Mahmood"
 email = "abdullah.au@outlook.com"
 github = "abdullahau"
 linkedin = "-abdullah-mahmood-"
-twitter = "abdullahau"
-bluesky = "abdullahmahmood.bsky.social"
-instagram = "abdullahmahmood_"
+x = "abdullahau"
+ig = "abdullahmahmood_"
+bsky = "abdullahmahmood.bsky.social"
 
 [search]
 include_title = true
