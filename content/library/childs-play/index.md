@@ -9,5 +9,5 @@ link = "https://harpers.org/archive/2026/03/childs-play-sam-kriss-ai-startup-roy
 thumbnail = "/media/library/childs-play/thumbnail.avif"
 
 [taxonomies]
-tags = ["Art & Culture", "Tech", "AI"]
+tags = ["art & culture", "tech", "ai"]
 +++

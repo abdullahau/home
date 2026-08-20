@@ -9,6 +9,9 @@
 {% set git_dates = load_data(path="_git-dates.json", required=false) %}
 <article>
   <h1 class="article-title">{{ page.title }}</h1>
+  {% if page.description %}
+  <div class="byline">{{ page.description }}</div>
+  {% endif %}
   <div class="post-meta">
     {% include "_wiki-updated.html" %}
     {% include "_tags.html" %}

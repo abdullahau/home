@@ -1,4 +1,4 @@
-abdullah.diy, abdullah.run {
+abdullah.run, abdullah.diy {
 	root * /srv
 	file_server
 	encode gzip

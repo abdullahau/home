@@ -137,7 +137,7 @@ plan and has already used up his Pages allowance there, so this repo must
 never grow a "deploy to GitHub Pages" Actions workflow. Instead:
 
 - The site is built and served from Abdullah's own VPS, live at
-  `abdullah.diy` and `abdullah.run` (identical content, `abdullah.diy` is
+  `abdullah.run` and `abdullah.diy` (identical content, `abdullah.run` is
   the canonical `base_url`). Both domains share one Caddyfile block.
 - Serving is Caddy running in Docker (chosen over a bare-metal install so the
   setup is replicable on another host if needed): `deploy/docker-compose.yml`

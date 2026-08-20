@@ -2,7 +2,7 @@
 
 Static site built with [Zola](https://www.getzola.org/) and theme inspired
 by Ellie Huxtable's [page](https://ellie.wtf/). Live at
-[abdullah.diy](https://abdullah.diy) / [abdullah.run](https://abdullah.run).
+[abdullah.run](https://abdullah.run) / [abdullah.run](https://abdullah.run).
 
 Content lives in six sections — `notes`, `projects`, `blog`, `work`,
 `library`, `travel` — plus a top-level `/about` page.

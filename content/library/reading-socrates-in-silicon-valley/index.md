@@ -9,7 +9,7 @@ link = "https://www.ft.com/content/f9e57ed6-ad07-491c-830a-88ba92d77add"
 thumbnail = "/media/library/reading-socrates-in-silicon-valley/thumbnail.avif"
 
 [taxonomies]
-tags = ["Art & Culture", "Tech", "Philosophy"]
+tags = ["art & culture", "tech", "philosophy"]
 +++
 
 This is an example library entry. Delete it once you have real entries.

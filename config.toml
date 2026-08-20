@@ -1,5 +1,5 @@
-# abdullah.run serves the same site; this is just the canonical one.
-base_url = "https://abdullah.diy"
+# abdullah.diy serves the same site; this is just the canonical one.
+base_url = "https://abdullah.run"
 title = "Abdullah Mahmood"
 description = "Personal site of Abdullah Mahmood"
 compile_sass = true
@@ -20,7 +20,7 @@ github = "abdullahau"
 linkedin = "-abdullah-mahmood-"
 x = "abdullahau"
 ig = "abdullahmahmood_"
-bsky = "abdullahmahmood.bsky.social"
+bsky = "abdullah.run"
 
 [search]
 include_title = true

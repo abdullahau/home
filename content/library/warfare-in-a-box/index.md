@@ -1,5 +1,5 @@
 +++
-title = "Warfare in a Box: Executive Outcomes and the making of the modern mercenary"
+title = "Warfare in a Box"
 date = 2026-04-11
 description = "Benjamin Fogel"
 
@@ -9,5 +9,5 @@ link = "https://thebaffler.com/salvos/warfare-in-a-box-fogel"
 thumbnail = "/media/library/warfare-in-a-box/thumbnail.avif"
 
 [taxonomies]
-tags = ["Politics", "History"]
+tags = ["politics", "history"]
 +++

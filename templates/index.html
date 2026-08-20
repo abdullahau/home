@@ -51,6 +51,9 @@
           </span>
           {% include "_wiki-updated.html" %}
         </div>
+        {% if page.description %}
+        <span class="wiki-desc">{{ page.description }}</span>
+        {% endif %}
       </li>
       {% endfor %}
     </ul>
