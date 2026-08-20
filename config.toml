@@ -14,6 +14,7 @@ github_alerts = true
 theme = "gruvbox-dark-soft"
 
 [extra]
+home_image = "/home-image.avif"
 author = "Abdullah Mahmood"
 email = "abdullah.au@outlook.com"
 github = "abdullahau"

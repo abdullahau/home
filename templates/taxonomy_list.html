@@ -5,10 +5,9 @@
 
 {% block content %}
 <div class="section-page">
-  <div class="section-header">
-    <h1># tags</h1>
-    <span class="section-path">~/tags</span>
-  </div>
+  {% set title = "tags" %}
+  {% set path = "~/tags" %}
+  {% include "_section-header.html" %}
   <ul class="post-list">
     {% for term in terms %}
     <li>

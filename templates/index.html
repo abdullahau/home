@@ -8,31 +8,9 @@
     I'm Abdullah Mahmood. <!-- TODO: write a one or two sentence bio here. --> Read my full <a href="/about/">CV and about page</a>.
   </p>
 
-  {% set notes_section = get_section(path="notes/_index.md") %}
-  {% if notes_section.pages | length > 0 %}
-  <div style="margin-bottom: 2rem;">
-    <div class="section-header">
-      <h2># notes</h2>
-      <span class="section-path">~/notes</span>
-    </div>
-    <ul class="post-list">
-      {% for page in notes_section.pages[:5] %}
-      <li>
-        <div>
-          <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
-          {% include "_tags.html" %}
-        </div>
-        {% if page.date %}
-        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% if notes_section.pages | length > 5 %}
-    <a href="/notes/" class="see-all">all notes &rarr;</a>
-    {% endif %}
-  </div>
-  {% endif %}
+  {% set section = get_section(path="notes/_index.md") %}
+  {% set label = "all notes" %}
+  {% include "_home-section.html" %}
 
   {% set projects_section = get_section(path="projects/_index.md") %}
   {% if projects_section.pages | length > 0 %}
@@ -41,18 +19,18 @@
       <h2># projects</h2>
       <span class="section-path">~/projects</span>
     </div>
-    <ul class="wiki-list">
+    <ul class="project-list">
       {% for page in projects_section.pages %}
       <li>
-        <div class="wiki-row">
-          <span class="wiki-link">
-            <a href="{{ page.path }}" class="wiki-title">{{ page.title }}</a>
+        <div class="project-row">
+          <span class="project-link">
+            <a href="{{ page.path }}" class="project-title">{{ page.title }}</a>
             {% include "_tags.html" %}
           </span>
-          {% include "_wiki-updated.html" %}
+          {% include "_project-updated.html" %}
         </div>
         {% if page.description %}
-        <span class="wiki-desc">{{ page.description }}</span>
+        <span class="project-desc">{{ page.description }}</span>
         {% endif %}
       </li>
       {% endfor %}
@@ -60,91 +38,25 @@
   </div>
   {% endif %}
 
-  {% set blog_section = get_section(path="blog/_index.md") %}
-  {% if blog_section.pages | length > 0 %}
-  <div style="margin-bottom: 2rem;">
-    <div class="section-header">
-      <h2># blog</h2>
-      <span class="section-path">~/blog</span>
-    </div>
-    <ul class="post-list">
-      {% for page in blog_section.pages[:5] %}
-      <li>
-        <div>
-          <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
-          {% include "_tags.html" %}
-        </div>
-        {% if page.date %}
-        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% if blog_section.pages | length > 5 %}
-    <a href="/blog/" class="see-all">all blog posts &rarr;</a>
-    {% endif %}
-  </div>
-  {% endif %}
+  {% set section = get_section(path="blog/_index.md") %}
+  {% set label = "all blog posts" %}
+  {% include "_home-section.html" %}
 
-  {% set work_section = get_section(path="work/_index.md") %}
-  {% if work_section.pages | length > 0 %}
-  <div style="margin-bottom: 2rem;">
-    <div class="section-header">
-      <h2># work</h2>
-      <span class="section-path">~/work</span>
-    </div>
-    <ul class="post-list">
-      {% for page in work_section.pages[:5] %}
-      <li>
-        <div>
-          <a href="{{ page.path }}" class="post-title">{{ page.title }}</a>
-          {% include "_tags.html" %}
-        </div>
-        {% if page.date %}
-        <span class="post-date">{{ page.date | date(format="%b %d, %Y") }}</span>
-        {% endif %}
-      </li>
-      {% endfor %}
-    </ul>
-    {% if work_section.pages | length > 5 %}
-    <a href="/work/" class="see-all">all work posts &rarr;</a>
-    {% endif %}
-  </div>
-  {% endif %}
+  {% set section = get_section(path="work/_index.md") %}
+  {% set label = "all work posts" %}
+  {% include "_home-section.html" %}
 
-  {% set library_section = get_section(path="library/_index.md") %}
-  {% if library_section.pages | length > 0 %}
-  <div style="margin-bottom: 2rem;">
-    <div class="section-header">
-      <h2># library</h2>
-      <span class="section-path">~/library</span>
-    </div>
-    {% set pages = library_section.pages[:5] %}
-    {% include "_thumb-list.html" %}
-    {% if library_section.pages | length > 5 %}
-    <a href="/library/" class="see-all">all library entries &rarr;</a>
-    {% endif %}
-  </div>
-  {% endif %}
+  {% set section = get_section(path="library/_index.md") %}
+  {% set label = "all library entries" %}
+  {% include "_home-thumb-section.html" %}
 
-  {% set travel_section = get_section(path="travel/_index.md") %}
-  {% if travel_section.pages | length > 0 %}
-  <div style="margin-bottom: 2rem;">
-    <div class="section-header">
-      <h2># travel</h2>
-      <span class="section-path">~/travel</span>
-    </div>
-    {% set pages = travel_section.pages[:5] %}
-    {% include "_thumb-list.html" %}
-    {% if travel_section.pages | length > 5 %}
-    <a href="/travel/" class="see-all">all travel posts &rarr;</a>
-    {% endif %}
-  </div>
-  {% endif %}
+  {% set section = get_section(path="travel/_index.md") %}
+  {% set label = "all travel posts" %}
+  {% include "_home-thumb-section.html" %}
   </div>
 
   <div class="side-col">
-    <img src="/home-image.avif" alt="Abdullah Mahmood" />
+    <img src="{{ config.extra.home_image }}" alt="Abdullah Mahmood" />
   </div>
 </div>
 {% endblock content %}

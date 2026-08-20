@@ -1,7 +1,7 @@
 +++
 title = "Travel"
 sort_by = "date"
-template = "travel-section.html"
+template = "thumb-section.html"
 description = "Trip write-ups from places I've been."
 
 [extra]

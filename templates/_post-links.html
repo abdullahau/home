@@ -1,0 +1,14 @@
+{# Expects `items` (a list of pages) and `heading` (string) in scope. #}
+<aside class="related">
+  <h2>{{ heading }}</h2>
+  <ul class="post-list">
+    {% for other in items %}
+    <li>
+      <a href="{{ other.permalink }}" class="post-title">{{ other.title }}</a>
+      {% if other.date %}
+      <span class="post-date">{{ other.date | date(format="%b %d, %Y") }}</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</aside>

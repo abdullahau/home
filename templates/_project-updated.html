@@ -2,9 +2,9 @@
    in scope. Priority: explicit `updated` front matter, then git log date,
    then `date` front matter. #}
 {% if page.updated %}
-<span class="wiki-updated">updated {{ page.updated | date(format="%b %d, %Y") }}</span>
+<span class="project-updated">updated {{ page.updated | date(format="%b %d, %Y") }}</span>
 {% elif git_dates and git_dates[page.relative_path] %}
-<span class="wiki-updated">updated {{ git_dates[page.relative_path] }}</span>
+<span class="project-updated">updated {{ git_dates[page.relative_path] }}</span>
 {% elif page.date %}
-<span class="wiki-updated">updated {{ page.date | date(format="%b %d, %Y") }}</span>
+<span class="project-updated">updated {{ page.date | date(format="%b %d, %Y") }}</span>
 {% endif %}

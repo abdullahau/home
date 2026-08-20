@@ -6,10 +6,9 @@
 
 {% block content %}
 <div class="section-page">
-  <div class="section-header">
-    <h1># {{ section.title | lower }}</h1>
-    <span class="section-path">~{{ section.path | trim_end(pat="/") }}</span>
-  </div>
+  {% set title = section.title | lower %}
+  {% set path = "~" ~ (section.path | trim_end(pat="/")) %}
+  {% include "_section-header.html" %}
 
   {% if section.description %}
   <p class="section-description">{{ section.description }}</p>
@@ -17,18 +16,18 @@
 
   {% if section.pages | length > 0 %}
   {% set git_dates = load_data(path="_git-dates.json", required=false) %}
-  <ul class="wiki-list">
+  <ul class="project-list">
     {% for page in section.pages %}
     <li>
-      <div class="wiki-row">
-        <span class="wiki-link">
-          <a href="{{ page.path }}" class="wiki-title">{{ page.title }}</a>
+      <div class="project-row">
+        <span class="project-link">
+          <a href="{{ page.path }}" class="project-title">{{ page.title }}</a>
           {% include "_tags.html" %}
         </span>
-        {% include "_wiki-updated.html" %}
+        {% include "_project-updated.html" %}
       </div>
       {% if page.description %}
-      <span class="wiki-desc">{{ page.description }}</span>
+      <span class="project-desc">{{ page.description }}</span>
       {% endif %}
     </li>
     {% endfor %}

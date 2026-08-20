@@ -19,7 +19,7 @@ Common commands (via `justfile`):
 
 - `just build` — runs `./build.sh`, which regenerates
   `content/_git-dates.json` (last-git-commit dates for `projects` pages,
-  read by `templates/wiki-page.html`), builds with Zola into a
+  read by `templates/project-page.html`), builds with Zola into a
   staging directory, then `rsync --delete`s the result into `public/`
   instead of letting `zola build` replace that directory outright — Caddy's
   Docker container bind-mounts `public/`, and swapping the directory (vs.
@@ -39,13 +39,13 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
 - `content/notes/` — short, informal technical notes. Date-ordered, same
   template as `work`/`blog`.
 - `content/projects/` — personal projects. The one section still
-  wiki-style (`templates/wiki-section.html` / `wiki-page.html`): title +
-  `description` + tags, no post date on the list — shows an `updated`
-  date (git commit date, see `_wiki-updated.html`) instead, since a
-  project is a living page, not a dated post.
+  wiki-style (`templates/project-section.html` / `project-page.html`):
+  title + `description` + tags, no post date on the list — shows an
+  `updated` date (git commit date, see `_project-updated.html`) instead,
+  since a project is a living page, not a dated post.
 - `content/blog/` — longer-form writing, work or non-work. Same
   date-ordered template as `notes`/`work`.
-- `content/library/` — reading/watch list (`library-section.html` /
+- `content/library/` — reading/watch list (`thumb-section.html` /
   `library-page.html`). Each entry is a page bundle (its own folder with
   `index.md`) with `extra.type` ("Book", "Article", "Video", "Movie", ...)
   prefixed onto the title, `description` doubling as author/creator, and
@@ -58,12 +58,17 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
   optionally converting it to WebP/AVIF via ImageMagick
   (`--convert avif --quality 50`) — worth doing for anything ImageMagick
   didn't already shrink, `og:image`s are often needlessly large.
-- `content/travel/` — trip write-ups (`travel-section.html`, pages use the
-  default `page.html`). Same page-bundle + optional `extra.thumbnail`
-  pattern as `library`, plus in-post photos. `library` and `travel` are the
-  only sections with thumbnails, and share one `_thumb-list.html`
-  homepage/list partial for that reason — everything else still uses the
-  plain `post-list`/`wiki-list` styling.
+- `content/travel/` — trip write-ups (also `thumb-section.html`, pages use
+  the default `page.html` — deliberately not `library-page.html`:
+  `extra.thumbnail` is still set for a trip's cover photo, but it only
+  feeds the homepage/list thumbnail and `og:image` (see Templates below) —
+  never a heading image on the entry's own page, unlike `library`. That's
+  Abdullah's explicit choice, not a gap to fix.). Same page-bundle +
+  optional `extra.thumbnail` pattern as `library`, plus in-post photos.
+  `library` and `travel` are the only sections with thumbnails: they share
+  `thumb-section.html` for their list pages and `_thumb-list.html` for the
+  row markup itself — everything else still uses the plain
+  `post-list`/`project-list` styling.
 - `content/about.md` — top-level page (About + CV: bio, experience,
   education, skills, contact). Currently scaffolded with `<!-- TODO -->`
   placeholders — fill in real content before publishing.
@@ -74,6 +79,33 @@ style — delete those once real content exists.
 
 Homepage section order: `notes`, `projects`, `blog`, `work`, `library`,
 `travel` (`templates/index.html`).
+
+### Templates
+
+Shared partials, beyond the per-section ones named above:
+
+- `_section-header.html` — the `<h1># title</h1>` + path block at the top
+  of every full section/taxonomy page (`section.html`, `project-section.html`,
+  `thumb-section.html`, `taxonomy_list.html`, `taxonomy_single.html`).
+  Takes `title`/`path` as plain strings set by the caller before the
+  `{% include %}`, not a `section` object — `taxonomy_list.html` has no
+  section to read one from.
+- `_home-section.html` / `_home-thumb-section.html` — the homepage's
+  per-section blocks (`notes`/`blog`/`work`, and `library`/`travel`
+  respectively): first 5 pages, plus a see-all link if there are more.
+  Take `section` (from `get_section`) and `label` (the see-all link
+  text — not derivable generically, since "all blog posts" vs "all
+  notes" vs "all library entries" don't share one pattern). `projects`
+  isn't part of either partial — it shows every project with no first-5
+  cutoff, so it stays its own block in `index.html`.
+- `_post-links.html` — the "Related notes" / "Linked from" boxes on
+  `page.html`. Takes `items` (a page list) and `heading` (string).
+
+`page.backlinks` ("Linked from") only populates when another page links to
+it using Zola's internal link syntax — `[text](@/blog/other-post.md)` —
+not a plain `/blog/other-post/` URL. No content here uses that syntax yet,
+so "Linked from" never renders: the template is correct, it's just unused
+until a post actually cross-links another one with `@/...`.
 
 ### Images (library/travel)
 
@@ -94,6 +126,13 @@ have kept only the middle ~24% of the image vertically.
   with that entry's `index.md`. Simple, but committed to git.
 - an absolute path starting with `/` (e.g. `/media/library/dune/cover.jpg`)
   — used as-is, unchanged. This is the recommended one.
+
+`og:image`/`twitter:image` (`base.html`) follow one fallback chain: a
+page's own `extra.thumbnail` if set (this is how `library`/`travel`
+entries get a real link-preview image — including `travel`, even though
+it never shows that image inline, per the note above), else
+`config.extra.home_image` (`/home-image.avif`), else `/favicon.svg` if
+`home_image` itself is ever unset.
 
 `media/` (repo root, gitignored) is for exactly this: images that live only
 on the VPS, never committed. `deploy/docker-compose.yml` bind-mounts it and

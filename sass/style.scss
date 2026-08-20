@@ -599,7 +599,7 @@ article {
 }
 
 // Wiki list (for projects, motorcycles, etc)
-.wiki-list {
+.project-list {
   list-style: none;
   padding: 0;
   display: flex;
@@ -617,18 +617,18 @@ article {
     }
   }
 
-  .wiki-row {
+  .project-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 0.5rem;
   }
 
-  .wiki-link {
+  .project-link {
     min-width: 0;
   }
 
-  .wiki-title {
+  .project-title {
     color: #3f3f46;
     text-decoration: none;
     transition: color 0.2s;
@@ -638,7 +638,7 @@ article {
     }
   }
 
-  .wiki-updated {
+  .project-updated {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.8rem;
     color: #a1a1aa;
@@ -646,7 +646,7 @@ article {
     white-space: nowrap;
   }
 
-  .wiki-desc {
+  .project-desc {
     display: block;
     font-size: 0.8rem;
     color: #a1a1aa;
@@ -654,7 +654,7 @@ article {
   }
 }
 
-.wiki-updated {
+.project-updated {
   font-style: italic;
 
   &::before {
@@ -1039,7 +1039,7 @@ footer {
     }
   }
 
-  .wiki-list {
+  .project-list {
     li {
       border-left-color: #3f3f46;
 
@@ -1048,7 +1048,7 @@ footer {
       }
     }
 
-    .wiki-title {
+    .project-title {
       color: #d4d4d8;
 
       &:hover {
@@ -1056,11 +1056,11 @@ footer {
       }
     }
 
-    .wiki-updated {
+    .project-updated {
       color: #71717a;
     }
 
-    .wiki-desc {
+    .project-desc {
       color: #71717a;
     }
   }

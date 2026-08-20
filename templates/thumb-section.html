@@ -6,10 +6,9 @@
 
 {% block content %}
 <div class="section-page">
-  <div class="section-header">
-    <h1># {{ section.title | lower }}</h1>
-    <span class="section-path">~{{ section.path | trim_end(pat="/") }}</span>
-  </div>
+  {% set title = section.title | lower %}
+  {% set path = "~" ~ (section.path | trim_end(pat="/")) %}
+  {% include "_section-header.html" %}
 
   {% if section.description %}
   <p class="section-description">{{ section.description }}</p>

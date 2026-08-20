@@ -1,0 +1,14 @@
+{# Expects `section` (from get_section) and `label` (see-all link text) in scope. #}
+{% if section.pages | length > 0 %}
+<div style="margin-bottom: 2rem;">
+  <div class="section-header">
+    <h2># {{ section.title | lower }}</h2>
+    <span class="section-path">~{{ section.path | trim_end(pat="/") }}</span>
+  </div>
+  {% set pages = section.pages[:5] %}
+  {% include "_thumb-list.html" %}
+  {% if section.pages | length > 5 %}
+  <a href="{{ section.path }}" class="see-all">{{ label }} &rarr;</a>
+  {% endif %}
+</div>
+{% endif %}
