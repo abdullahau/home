@@ -9,7 +9,8 @@
   {% set fallback_image = config.extra.home_image or "/favicon.svg" %}
   {% if page is defined %}
     {% set_global meta_title = page.title ~ " · " ~ config.title %}
-    {% set_global meta_description = page.description or config.description %}
+    {% set excerpt = (page.summary or page.content) | striptags | trim | truncate(length=160) %}
+    {% set_global meta_description = page.description or excerpt or config.description %}
     {% set_global meta_url = config.base_url ~ page.path %}
     {% set_global meta_type = "article" %}
     {% if page.extra.thumbnail %}

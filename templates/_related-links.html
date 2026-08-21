@@ -1,0 +1,32 @@
+{# Expects `page` in scope. Renders "Related notes" (other pages sharing a
+   tag with this one, site-wide) then "Linked from" (page.backlinks) via
+   _post-links.html. #}
+{% if page.taxonomies.tags %}
+{% set_global related = [] %}
+{% set_global seen_permalinks = [page.permalink] %}
+{% if page.backlinks %}
+  {% for b in page.backlinks %}
+    {% set_global seen_permalinks = [...seen_permalinks, b.permalink] %}
+  {% endfor %}
+{% endif %}
+{% for tag in page.taxonomies.tags %}
+  {% set term = get_taxonomy_term(kind="tags", term=tag) %}
+  {% for other in term.pages %}
+    {% if other.permalink not in seen_permalinks %}
+      {% set_global related = [...related, other] %}
+      {% set_global seen_permalinks = [...seen_permalinks, other.permalink] %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+{% if related | length > 0 %}
+{% set items = related %}
+{% set heading = "Related notes" %}
+{% include "_post-links.html" %}
+{% endif %}
+{% endif %}
+
+{% if page.backlinks %}
+{% set items = page.backlinks %}
+{% set heading = "Linked from" %}
+{% include "_post-links.html" %}
+{% endif %}

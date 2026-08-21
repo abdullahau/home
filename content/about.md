@@ -37,5 +37,5 @@ What you did, in a sentence or two.
 ## Contact
 
 - Email: [abdullah.au@outlook.com](mailto:abdullah.au@outlook.com)
-- GitHub: [abdullahau](https://github.com/abdullahau)
 - LinkedIn: [-abdullah-mahmood-](https://www.linkedin.com/in/-abdullah-mahmood/)
+- GitHub: [abdullahau](https://github.com/abdullahau)

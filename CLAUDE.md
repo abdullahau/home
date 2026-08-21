@@ -73,9 +73,26 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
   education, skills, contact). Currently scaffolded with `<!-- TODO -->`
   placeholders — fill in real content before publishing.
 
-Each section has one `example-*` page (or `example-entry/` for the two
-page-bundle sections) showing the expected front matter for that template
-style — delete those once real content exists.
+Each section has one `reference.md` page (`reference/index.md` for the
+two page-bundle sections, `library`/`travel`) showing that section's
+expected front matter and exercising every template feature (byline,
+tags, in-post images, `@/...` cross-links). Each sets `hidden = true` —
+Zola's `hidden` (0.23+) still builds the page at its own URL, but drops it
+from its section's `pages` list and, crucially, filters it out of
+taxonomy term pages wherever they're read (`/tags/...`, and any page's
+"Related notes", since that reads the same term data) — plus the search
+index, sitemap, and RSS/Atom feeds. The one thing `hidden` does *not*
+filter is backlinks: a hidden page linking to a real one still shows up in
+that real page's "Linked from". So each `reference.md` only links to the
+other five reference pages, never to real content — that's what keeps
+them out of every real page's "Linked from" too. They also share the
+`tech` tag with real content on purpose: a tag used *only* by hidden pages
+ends up with zero visible pages after filtering, and `get_taxonomy_url`
+errors on a term with nothing left to link to — reuse an existing tag,
+don't invent a hidden-only one. (This pattern replaced the older
+`example-*` placeholder pages, which stayed visible in listings until
+manually deleted — `work/example-work.md` and `library/example-entry/`
+are still around as leftovers from that convention.)
 
 Homepage section order: `notes`, `projects`, `blog`, `work`, `library`,
 `travel` (`templates/index.html`).

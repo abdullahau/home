@@ -4,9 +4,8 @@
 {% set git_dates = load_data(path="_git-dates.json", required=false) %}
 <div class="homepage">
   <div class="main-col">
-  <p class="bio">
-    I'm Abdullah Mahmood. <!-- TODO: write a one or two sentence bio here. --> Read my full <a href="/about/">CV and about page</a>.
-  </p>
+  {% set bio = get_page(path="bio.md") %}
+  <div class="bio">{{ bio.content | safe }}</div>
 
   {% set section = get_section(path="notes/_index.md") %}
   {% set label = "all notes" %}
