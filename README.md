@@ -83,10 +83,11 @@ To load images faster with the lowest memory footprint, use AVIF/WebP
 formats with appropriate quality compression and image sizing.
 
 Use [ImageMagick](https://imagemagick.org/) to convert image format, set
-the quality compression level, and resize, all in one command:
+the quality compression level, resize, and strip metadata, all in one
+command:
 
 ```
-magick input.jpg -resize 'WxH>' -quality Q output.avif
+magick input.jpg -resize 'WxH>' -quality Q +profile 'exif,xmp,8bim,iptc' output.avif
 ```
 
 Its `-resize` geometry controls how width and height combine:
@@ -101,13 +102,26 @@ Use `WxH>` for thumbnails, `Wx>` for images inside post content.
 **Thumbnails** (~1200x630 box):
 
 ```
-magick input.jpg -resize '1200x630>' -quality 50 output.avif
+magick input.jpg -resize '1200x630>' -quality 50 +profile 'exif,xmp,8bim,iptc' output.avif
 ```
 
 **Body images** (~1600 wide):
 
 ```
-magick input.jpg -resize '1600x>' -quality 50 output.avif
+magick input.jpg -resize '1600x>' -quality 50 +profile 'exif,xmp,8bim,iptc' output.avif
 ```
 
-`-quality 50` is the AVIF default used across this site.
+`-quality 50` is the AVIF default used across this site. `+profile
+'exif,xmp,8bim,iptc'` strips camera/GPS/software metadata — phone photos
+carry exact GPS coordinates by default — while keeping the ICC color
+profile (`-strip` removes everything including that; iPhone photos are
+often tagged Display P3, not sRGB, so dropping it can shift colors on
+wide-gamut screens).
+
+Already-converted AVIFs can't be re-stripped with ImageMagick without
+another lossy re-encode. Use `exiftool` instead, which edits metadata
+without touching pixel data:
+
+```
+exiftool -all= -tagsFromFile @ -icc_profile:all -overwrite_original file.avif
+```

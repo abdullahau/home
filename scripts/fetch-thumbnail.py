@@ -79,7 +79,7 @@ def main() -> None:
         cmd = ["magick", str(out_path)]
         if args.resize:
             cmd += ["-resize", f"{args.resize}>"]
-        cmd += ["-quality", str(args.quality), str(converted_path)]
+        cmd += ["-quality", str(args.quality), "+profile", "exif,xmp,8bim,iptc", str(converted_path)]
         subprocess.run(cmd, check=True)
         out_path.unlink()
         out_path = converted_path
