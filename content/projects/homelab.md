@@ -17,7 +17,7 @@ media, adblocker, and remote development.
 
 Here is a snapshot of my service right now:
 
-![homelab setup](/media/projects/homelab/homelab-network-diagram.png) 
+![homelab setup](/media/projects/homelab/homelab-network-diagram.avif) 
 
 You can find details of my docker services on my [homelab repo](https://github.com/abdullahau/homelab).
 Which can be used along with my [dotfiles repo](https://github.com/abdullahau/dotfiles) (`git switch homelab`) 

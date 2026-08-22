@@ -91,13 +91,13 @@ Use `WxH>` for thumbnails, `Wx>` for images inside post content.
 **Thumbnails** (~1200x630 box):
 
 ```
-magick input.jpg -resize 1200x630> -quality 50 output.avif
+magick input.jpg -resize '1200x630>' -quality 50 output.avif
 ```
 
 **Body images** (~1600 wide):
 
 ```
-magick input.jpg -resize 1600x> -quality 50 output.avif
+magick input.jpg -resize '1600x>' -quality 50 output.avif
 ```
 
 `-quality 50` is the AVIF default used across this site.

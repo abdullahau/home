@@ -6,7 +6,7 @@ description = "Jemima Kelly"
 [extra]
 type = "Article"
 link = "https://www.ft.com/content/f9e57ed6-ad07-491c-830a-88ba92d77add"
-thumbnail = "/media/library/reading-socrates-in-silicon-valley/thumbnail.avif"
+thumbnail = "/media/library/socrates-in-sv/thumbnail.avif"
 
 [taxonomies]
 tags = ["art & culture", "tech", "philosophy"]
