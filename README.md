@@ -76,3 +76,28 @@ the bind mount to `public/` can otherwise end up stale.
 cd deploy
 docker compose down
 ```
+
+## Images
+
+ImageMagick's `-resize` geometry controls how width and height combine:
+
+- `WxH>` — fit inside a box of that width and height, aspect ratio
+  preserved (shrinks only, never crops, never upscales)
+- `Wx>` — cap the width only; height follows the aspect ratio
+  automatically
+
+Use `WxH>` for thumbnails, `Wx>` for images inside post content.
+
+**Thumbnails** (~1200x630 box):
+
+```
+magick input.jpg -resize 1200x630> -quality 50 output.avif
+```
+
+**Body images** (~1600 wide):
+
+```
+magick input.jpg -resize 1600x> -quality 50 output.avif
+```
+
+`-quality 50` is the AVIF default used across this site.

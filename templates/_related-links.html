@@ -1,6 +1,4 @@
-{# Expects `page` in scope. Renders "Related notes" (other pages sharing a
-   tag with this one, site-wide) then "Linked from" (page.backlinks) via
-   _post-links.html. #}
+{# Expects `page` in scope. Renders "Related notes" then "Linked from" via _post-links.html. #}
 {% if page.taxonomies.tags %}
 {% set_global related = [] %}
 {% set_global seen_permalinks = [page.permalink] %}

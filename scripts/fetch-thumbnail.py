@@ -3,10 +3,10 @@
 # dependencies = ["httpx", "beautifulsoup4"]
 # ///
 """Pull an og:image (or twitter:image) from a library/travel entry's `link`
-and save it into media/, gitignored and served by Caddy at /media/... —
-see CLAUDE.md.
+and save it into media/ (gitignored, served at /media/...). See README.md
+for image sizing guidance.
 
-Usage: uv run scripts/fetch-thumbnail.py content/library/some-entry [--convert webp|avif] [--quality 50]
+Usage: uv run scripts/fetch-thumbnail.py content/library/some-entry [--convert webp|avif] [--quality 50] [--resize 1200x630]
 """
 
 import argparse
@@ -48,6 +48,9 @@ def main() -> None:
     parser.add_argument(
         "--quality", type=int, default=50, help="quality for --convert, e.g. 40/50/60 (default: 50)"
     )
+    parser.add_argument(
+        "--resize", help="max WxH to shrink to before converting, e.g. 1200x630 (never upscales)"
+    )
     args = parser.parse_args()
 
     entry_dir = args.entry_dir
@@ -73,10 +76,11 @@ def main() -> None:
 
     if args.convert:
         converted_path = media_dir / f"thumbnail.{args.convert}"
-        subprocess.run(
-            ["magick", str(out_path), "-quality", str(args.quality), str(converted_path)],
-            check=True,
-        )
+        cmd = ["magick", str(out_path)]
+        if args.resize:
+            cmd += ["-resize", f"{args.resize}>"]
+        cmd += ["-quality", str(args.quality), str(converted_path)]
+        subprocess.run(cmd, check=True)
         out_path.unlink()
         out_path = converted_path
 

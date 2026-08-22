@@ -36,7 +36,6 @@
     {% set_global meta_image = config.base_url ~ fallback_image %}
   {% endif %}
 
-  <!-- Open Graph -->
   <meta property="og:title" content="{{ meta_title }}">
   <meta property="og:description" content="{{ meta_description }}">
   <meta property="og:url" content="{{ meta_url }}">
@@ -44,7 +43,6 @@
   <meta property="og:site_name" content="{{ config.title }}">
   <meta property="og:image" content="{{ meta_image }}">
 
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@{{ config.extra.x }}">
   <meta name="twitter:title" content="{{ meta_title }}">
@@ -122,7 +120,6 @@
         wrapper.appendChild(button);
       });
 
-      // Theme toggle
       var toggle = document.getElementById("theme-toggle");
       if (toggle) {
         toggle.addEventListener("click", function() {

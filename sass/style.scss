@@ -287,8 +287,7 @@ main {
 
 }
 
-// Shared with .thumb-list (library/travel) — not nested, so it applies
-// to both.
+// Shared with .thumb-list (library/travel) — not nested, so it applies to both.
 .post-date {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.8rem;
@@ -608,7 +607,7 @@ article {
   }
 }
 
-// Wiki list (for projects, motorcycles, etc)
+// Project list
 .project-list {
   list-style: none;
   padding: 0;
@@ -676,8 +675,7 @@ article {
   }
 }
 
-// Thumb list (for library, travel — like post-list, plus an optional
-// colocated thumbnail image on entries that have one)
+// Thumb list (library/travel — like post-list, plus an optional thumbnail)
 .thumb-list {
   list-style: none;
   padding: 0;
@@ -866,8 +864,7 @@ footer {
   }
 }
 
-// Dark mode — a mixin so both the auto (system) and manual-override
-// cases below can share the same rules.
+// Mixin so auto (system) and manual-override dark mode share the same rules.
 @mixin dark-theme {
   body {
     background: #18181b;

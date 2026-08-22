@@ -1,6 +1,4 @@
-{# Expects `page` and `git_dates` (from load_data(path="_git-dates.json"))
-   in scope. Priority: explicit `updated` front matter, then git log date,
-   then `date` front matter. #}
+{# Expects `page` and `git_dates` in scope. Priority: updated > git log date > date. #}
 {% if page.updated %}
 <span class="project-updated">updated {{ page.updated | date(format="%b %d, %Y") }}</span>
 {% elif git_dates and git_dates[page.relative_path] %}

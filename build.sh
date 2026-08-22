@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# Generate git-based "updated" dates for wiki pages
+# Generate git-based "updated" dates for project pages
 json="{"
 first=true
 for section in projects; do
@@ -24,8 +24,7 @@ done
 json="$json }"
 echo "$json" > content/_git-dates.json
 
-# Stage then rsync into public/ — replacing the directory outright would
-# break Caddy's bind mount on it.
+# rsync into public/ — replacing the directory outright breaks Caddy's bind mount.
 rm -rf public.new
 zola build -o public.new "$@"
 mkdir -p public
