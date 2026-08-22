@@ -79,7 +79,17 @@ docker compose down
 
 ## Images
 
-ImageMagick's `-resize` geometry controls how width and height combine:
+To load images faster with the lowest memory footprint, use AVIF/WebP
+formats with appropriate quality compression and image sizing.
+
+Use [ImageMagick](https://imagemagick.org/) to convert image format, set
+the quality compression level, and resize, all in one command:
+
+```
+magick input.jpg -resize 'WxH>' -quality Q output.avif
+```
+
+Its `-resize` geometry controls how width and height combine:
 
 - `WxH>` — fit inside a box of that width and height, aspect ratio
   preserved (shrinks only, never crops, never upscales)
