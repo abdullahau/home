@@ -24,6 +24,22 @@ abdullah.run, abdullah.diy {
 	}
 }
 
+# Plex alias — raw relay on 32400 (vps/relay.sh) for Plex apps direct use
+# Plex server settings (Settings > Network):
+#   Custom server access URLs: https://plex.abdullah.run:443
+#   Secure connections: Preferred (not Required — blocks Caddy's cert)
+plex.abdullah.run {
+	reverse_proxy 100.125.140.11:32400
+}
+
+jellyfin.abdullah.run {
+	reverse_proxy 100.125.140.11:8096
+}
+
+navidrome.abdullah.run {
+	reverse_proxy 100.125.140.11:4533
+}
+
 # Fallback bare-IP block — uncomment if the domains ever break.
 # :80 {
 # 	root * /srv
