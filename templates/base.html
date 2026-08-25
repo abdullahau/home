@@ -14,11 +14,7 @@
     {% set_global meta_url = config.base_url ~ page.path %}
     {% set_global meta_type = "article" %}
     {% if page.extra.thumbnail %}
-      {% if page.extra.thumbnail[0] == "/" %}
-        {% set_global meta_image = config.base_url ~ page.extra.thumbnail %}
-      {% else %}
-        {% set_global meta_image = config.base_url ~ page.path ~ page.extra.thumbnail %}
-      {% endif %}
+      {% set_global meta_image = config.base_url ~ page.extra.thumbnail %}
     {% else %}
       {% set_global meta_image = config.base_url ~ fallback_image %}
     {% endif %}

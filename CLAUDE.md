@@ -46,24 +46,22 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
 - `content/blog/` — longer-form writing, work or non-work. Same
   date-ordered template as `notes`/`work`.
 - `content/library/` — reading/watch list (`thumb-section.html` /
-  `library-page.html`). Each entry is a page bundle (its own folder with
-  `index.md`) with `extra.type` ("Book", "Article", "Video", "Movie", ...)
-  prefixed onto the title, `description` doubling as author/creator, and
-  `extra.link` to the original source. `extra.thumbnail` shows up next to
-  the entry on the homepage and `/library/`, and again as a heading image
-  on the entry's own page (between the meta line and the note/comment
-  body) — leave it unset and the entry just renders as text, no image
-  anywhere. `scripts/fetch-thumbnail.py` can pull one from the entry's
-  `link` (its `og:image`/`twitter:image`) instead of adding one by hand,
-  optionally converting it to WebP/AVIF via ImageMagick
-  (`--convert avif --quality 50`) — worth doing for anything ImageMagick
-  didn't already shrink, `og:image`s are often needlessly large.
+  `library-page.html`). Flat `.md` files, one per entry, same as
+  `notes`/`blog`/`work`, with `extra.type` ("Book", "Article", "Video",
+  "Movie", ...) prefixed onto the title, `description` doubling as
+  author/creator, and `extra.link` to the original source. `extra.thumbnail`
+  shows up next to the entry on the homepage and `/library/`, and again as
+  a heading image on the entry's own page (between the meta line and the
+  note/comment body) — leave it unset and the entry just renders as text,
+  no image anywhere. There's no automated way to pull a thumbnail: find one
+  manually (e.g. the source page's `og:image`) and save it into `media/`
+  with the ImageMagick command under Images below.
 - `content/travel/` — trip write-ups (also `thumb-section.html`, pages use
   the default `page.html` — deliberately not `library-page.html`:
   `extra.thumbnail` is still set for a trip's cover photo, but it only
   feeds the homepage/list thumbnail and `og:image` (see Templates below) —
   never a heading image on the entry's own page, unlike `library`. That's
-  Abdullah's explicit choice, not a gap to fix.). Same page-bundle +
+  Abdullah's explicit choice, not a gap to fix.). Same flat-file +
   optional `extra.thumbnail` pattern as `library`, plus in-post photos.
   `library` and `travel` are the only sections with thumbnails: they share
   `thumb-section.html` for their list pages and `_thumb-list.html` for the
@@ -73,10 +71,9 @@ Never edit `content/_git-dates.json` by hand — it's a build artifact
   education, skills, contact). Currently scaffolded with `<!-- TODO -->`
   placeholders — fill in real content before publishing.
 
-Each section has one `reference.md` page (`reference/index.md` for the
-two page-bundle sections, `library`/`travel`) showing that section's
-expected front matter and exercising every template feature (byline,
-tags, in-post images, `@/...` cross-links). Each sets `hidden = true` —
+Each section has one `reference.md` page showing that section's expected
+front matter and exercising every template feature (byline, tags, in-post
+images, `@/...` cross-links). Each sets `hidden = true` —
 Zola's `hidden` (0.23+) still builds the page at its own URL, but drops it
 from its section's `pages` list and, crucially, filters it out of
 taxonomy term pages wherever they're read (`/tags/...`, and any page's
@@ -89,10 +86,9 @@ them out of every real page's "Linked from" too. They also share the
 `tech` tag with real content on purpose: a tag used *only* by hidden pages
 ends up with zero visible pages after filtering, and `get_taxonomy_url`
 errors on a term with nothing left to link to — reuse an existing tag,
-don't invent a hidden-only one. (This pattern replaced the older
-`example-*` placeholder pages, which stayed visible in listings until
-manually deleted — `work/example-work.md` and `library/example-entry/`
-are still around as leftovers from that convention.)
+don't invent a hidden-only one. (This pattern replaced an older
+`example-*` placeholder-page convention, which stayed visible in listings
+until manually deleted.)
 
 Homepage section order: `notes`, `projects`, `blog`, `work`, `library`,
 `travel` (`templates/index.html`).
@@ -137,12 +133,11 @@ earlier approach (`width: 100%` + `object-fit: cover`) was tried first and
 rejected: for a ~2:3 portrait cover in a ~2.8:1 wide box, `cover` would
 have kept only the middle ~24% of the image vertically.
 
-`extra.thumbnail`, and any in-post image in a `travel` entry, can be either:
-
-- a bare filename (`cover.jpg`) — resolved as a page-bundle image colocated
-  with that entry's `index.md`. Simple, but committed to git.
-- an absolute path starting with `/` (e.g. `/media/library/dune/cover.jpg`)
-  — used as-is, unchanged. This is the recommended one.
+`extra.thumbnail`, and any in-post image in a `travel` entry, is always an
+absolute path starting with `/` (e.g. `/media/library/dune/cover.avif`) —
+used as-is, unchanged. `library`/`travel` are flat `.md` files with no
+page bundle, so there's no colocated folder to resolve a bare filename
+against.
 
 `og:image`/`twitter:image` (`base.html`) follow one fallback chain: a
 page's own `extra.thumbnail` if set (this is how `library`/`travel`
@@ -157,7 +152,7 @@ on the VPS, never committed. `deploy/docker-compose.yml` bind-mounts it and
 layout (`media/travel/sri-lanka/temple.jpg` → `/media/travel/sri-lanka/temple.jpg`).
 Zola/git never touch it. This matters for `travel` especially — real trip
 photos add up fast, and git never shrinks binary history without a
-rewrite. `scripts/fetch-thumbnail.py` already saves into `media/`.
+rewrite.
 
 Cloudflare (free plan, proxying both domains) is live for fast image
 delivery — nameservers switched at GoDaddy to Cloudflare's.

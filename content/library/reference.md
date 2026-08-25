@@ -26,4 +26,4 @@ Cross-content references:
 - [blog reference](@/blog/reference.md)
 - [work reference](@/work/reference.md)
 - [projects reference](@/projects/reference.md)
-- [travel reference](@/travel/reference/index.md)
+- [travel reference](@/travel/reference.md)

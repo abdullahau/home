@@ -1,13 +1,9 @@
-{# Expects `pages` in scope. `extra.thumbnail` is a bare filename or an absolute path (see CLAUDE.md). #}
+{# Expects `pages` in scope, set by the caller before {% include %}. #}
 <ul class="thumb-list">
   {% for page in pages %}
   <li>
     {% if page.extra.thumbnail %}
-    {% if page.extra.thumbnail[0] == "/" %}
     <img class="thumb-img" src="{{ page.extra.thumbnail }}" alt="" loading="lazy" />
-    {% else %}
-    <img class="thumb-img" src="{{ page.path }}{{ page.extra.thumbnail }}" alt="" loading="lazy" />
-    {% endif %}
     {% endif %}
     <div class="thumb-body">
       <div class="thumb-row">

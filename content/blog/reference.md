@@ -22,5 +22,5 @@ Cross-content references:
 - [notes reference](@/notes/reference.md)
 - [work reference](@/work/reference.md)
 - [projects reference](@/projects/reference.md)
-- [library reference](@/library/reference/index.md)
-- [travel reference](@/travel/reference/index.md)
+- [library reference](@/library/reference.md)
+- [travel reference](@/travel/reference.md)

@@ -23,11 +23,7 @@
   {% endif %}
 
   {% if page.extra.thumbnail %}
-  {% if page.extra.thumbnail[0] == "/" %}
   <img class="article-thumb" src="{{ page.extra.thumbnail }}" alt="" />
-  {% else %}
-  <img class="article-thumb" src="{{ page.path }}{{ page.extra.thumbnail }}" alt="" />
-  {% endif %}
   {% endif %}
 
   <div class="content">
