@@ -23,6 +23,8 @@ cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
 
 IMG = re.compile(r'<img\b([^>]*?)\s*/?>')
 SRC = re.compile(r'\bsrc\s*=\s*"([^"]+)"')
+STYLE = re.compile(r'\bstyle\s*=\s*"([^"]*)"')
+HAS_SIZE = re.compile(r'\b(width|height)\s*=')
 FIGURE = re.compile(r'<figure\b((?:(?!style=)[^>])*)>(\s*<img\b[^>]*--ar:([\d.]+)[^>]*>)')
 
 
@@ -62,7 +64,22 @@ def annotate(m):
     meta = fetch(s.group(1))
     if not meta:
         return m.group(0)
-    return f'<img{attrs} width="{meta["width"]}" height="{meta["height"]}" style="--ar:{meta["width"] / meta["height"]:.4f}">'
+    ar = f'--ar:{meta["width"] / meta["height"]:.4f}'
+
+    # Merge into an existing style="" rather than emitting a second one —
+    # duplicate attributes are invalid and the browser keeps only the first.
+    style = STYLE.search(attrs)
+    if style:
+        existing = style.group(1).rstrip().rstrip(";")
+        merged = f'{existing};{ar}' if existing else ar
+        attrs = attrs[:style.start()] + f'style="{merged}"' + attrs[style.end():]
+    else:
+        attrs = f'{attrs} style="{ar}"'
+
+    # Author-set width/height wins; don't duplicate it.
+    if not HAS_SIZE.search(attrs):
+        attrs = f'{attrs} width="{meta["width"]}" height="{meta["height"]}"'
+    return f'<img{attrs}>'
 
 
 changed = 0
