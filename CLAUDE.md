@@ -127,9 +127,9 @@ Shared partials, beyond the per-section ones named above:
 
 `page.backlinks` ("Linked from") only populates when another page links to
 it using Zola's internal link syntax — `[text](@/blog/other-post.md)` —
-not a plain `/blog/other-post/` URL. No content here uses that syntax yet,
-so "Linked from" never renders: the template is correct, it's just unused
-until a post actually cross-links another one with `@/...`.
+not a plain `/blog/other-post/` URL. `projects/homelab.md` links to
+`notes/self-hosted.md` this way, so that note renders a "Linked from" box;
+any page still using a plain URL won't.
 
 ### Images (library/life)
 

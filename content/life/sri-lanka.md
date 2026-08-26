@@ -11,14 +11,25 @@ thumbnail = "/media/life/sri-lanka/20231013_053150074_iOS.avif"
 tags = ["tea"]
 +++
 
-Set `extra.thumbnail` above to show a photo on the homepage or leave it unset
+<div class="photo-grid">
+<img src="/media/life/sri-lanka/20231013_053150074_iOS.avif" />
+<img src="/media/life/sri-lanka/20231013_053336524_iOS.avif" alt="floating above a lake"/>
+<img src="/media/life/sri-lanka/20231013_055435390_iOS.avif" alt="buddhist temple"/>
+<figcaption>Colombo</figcaption>
+</div>
 
-Reference images in markdown in the following way:
-`![a temple](/media/life/example-entry/temple.jpg)`. 
-
-![Sample hidden caption — only shows up in the lightbox, not under the photo](/media/life/sri-lanka/20231013_055435390_iOS.avif)
+<div class="photo-grid">
+<img src="/media/life/sri-lanka/20231014_133949322_iOS.avif" />
+<figure>
+    <img src="/media/life/sri-lanka/20231014_134404587_iOS.avif" alt="floating above a lake"/>
+<figcaption>Tea Factory Hotel</figcaption>
+</figure>    
+<img src="/media/life/sri-lanka/20231015_034932792_iOS.avif" />
+<figcaption>Nuwara Eliya</figcaption>
+</div>
 
 <figure>
-<img src="/media/life/sri-lanka/20231013_053336524_iOS.avif" />
-<figcaption>Sample visible caption — shows under the photo and in the lightbox</figcaption>
+<img src="/media/life/sri-lanka/20231019_050310842_iOS.avif"  alt="Hidden caption, shown only in the lightbox" width="500" style="display: block; margin: 0 auto;"/>
+<figcaption>Jami Ul-Alfar Mosque</figcaption>
 </figure>
+

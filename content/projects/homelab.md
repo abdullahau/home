@@ -8,7 +8,8 @@ tags = ["homelab", "tech"]
 +++
 
 I happened to chance upon the homelab community whilst trying to setup
-[NocoDB](https://nocodb.com/) a self-hosted, no-code database solution for my workplace.
+[NocoDB](https://nocodb.com/) a self-hosted, no-code database solution for my
+[workplace](@/notes/self-hosted.md).
 
 The merits of owning your data and building outside a typical price tiered SaaS 
 model would be obvious for anyone paying 
@@ -55,3 +56,7 @@ to setup your own homelab. Dotfiles repo setups Docker, Tailscale, samba and oth
 on a fresh Linux Ubuntu machine.
 
 In my case, because I am using a laptop, it sets a lid switch config to allow the laptop run in clamshell mode.
+
+<img src="/media/projects/homelab/homelab-stack-fake.avif" alt="homelab stack fake" width="500" style="display: block; margin: 0 auto;">
+
+![homelab stack](/media/projects/homelab/homelab-stack.avif)
