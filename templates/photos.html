@@ -60,6 +60,7 @@
 
       function matches(img, key, value) {
         if (!value) return true;
+        if (key === "from") return img.dataset.title === value;
         return img.dataset[key] === value;
       }
 

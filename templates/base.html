@@ -97,7 +97,7 @@
     <button class="lightbox-prev" aria-label="Previous image">&lsaquo;</button>
     <img alt="">
     <button class="lightbox-next" aria-label="Next image">&rsaquo;</button>
-    <div class="lightbox-caption"><span></span><a></a></div>
+    <div class="lightbox-caption"><span></span><a></a><small class="lightbox-description"></small></div>
   </dialog>
 
   <script>
@@ -111,6 +111,7 @@
       var view = box.querySelector("img");
       var caption = box.querySelector(".lightbox-caption span");
       var link = box.querySelector(".lightbox-caption a");
+      var description = box.querySelector(".lightbox-description");
       var index = 0;
 
       function show(i, step) {
@@ -127,7 +128,8 @@
         caption.textContent = text;
         link.textContent = img.dataset.title ? "from: " + img.dataset.title : "";
         link.href = img.dataset.href || "";
-        box.classList.toggle("has-caption", !!(text || img.dataset.href));
+        description.textContent = img.dataset.description || "";
+        box.classList.toggle("has-caption", !!(text || img.dataset.href || img.dataset.description));
         // Preload neighbours so arrowing through feels instant.
         [index + 1, index - 1].forEach(function(j) {
           new Image().src = images[(j + images.length) % images.length].src;

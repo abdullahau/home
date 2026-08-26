@@ -201,6 +201,7 @@ main {
 
     img {
       width: 100%;
+      height: auto;
       border-radius: 0.25rem;
       object-fit: contain;
     }
@@ -578,6 +579,7 @@ article {
 
     img {
       max-width: 100%;
+      height: auto;
       border-radius: 0.25rem;
       margin: 1rem 0;
       object-fit: contain;
@@ -1108,6 +1110,17 @@ body:has(.lightbox[open]) {
 
   .lightbox.has-caption & {
     display: block;
+  }
+
+  .lightbox-description {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #a1a1aa;
+
+    &:empty {
+      display: none;
+    }
   }
 
   a {
