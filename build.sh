@@ -24,9 +24,16 @@ done
 json="$json }"
 echo "$json" > content/_git-dates.json
 
+# Collect life/ photos into content/_photos.json for /photos (life-only, see scripts/photos.py)
+uv run scripts/photos.py
+
 # rsync into public/ — replacing the directory outright breaks Caddy's bind mount.
 rm -rf public.new
 zola build -o public.new "$@"
+
+# Annotate images with dimensions (justified .photo-grid rows, no layout shift)
+uv run scripts/image-meta.py public.new
+
 mkdir -p public
 rsync -a --delete public.new/ public/
 rm -rf public.new

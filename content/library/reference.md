@@ -15,7 +15,7 @@ tags = ["tech"]
 
 Hidden reference page for the `library` front matter and templates
 (`thumb-section.html` / `library-page.html`). `extra.thumbnail` renders as
-a heading image on this page (unlike `travel`, see the travel reference).
+a heading image on this page (unlike `life`, see the life reference).
 See [notes reference](@/notes/reference.md) for the full explanation of
 what `hidden = true` does and why this only links to other reference
 pages.
@@ -26,4 +26,4 @@ Cross-content references:
 - [blog reference](@/blog/reference.md)
 - [work reference](@/work/reference.md)
 - [projects reference](@/projects/reference.md)
-- [travel reference](@/travel/reference.md)
+- [life reference](@/life/reference.md)

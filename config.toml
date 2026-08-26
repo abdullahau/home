@@ -5,7 +5,7 @@ description = "Personal site of Abdullah Mahmood"
 compile_sass = true
 build_search_index = true
 generate_feeds = true
-feed_filenames = ["atom.xml", "index.xml"]
+feed_filenames = ["atom.xml"]
 
 [markdown]
 github_alerts = true
@@ -31,4 +31,3 @@ include_content = true
 
 [[taxonomies]]
 name = "tags"
-feed = true

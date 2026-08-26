@@ -11,7 +11,7 @@ abdullah.run, abdullah.diy {
 	header @html Cache-Control "public, max-age=0, must-revalidate"
 
 	# Images/etc that live only on the VPS, outside the git repo
-	# /media/travel/some-trip/photo.jpg -> media/travel/some-trip/photo.jpg
+	# /media/life/some-trip/photo.jpg -> media/life/some-trip/photo.jpg
 	handle_path /media/* {
 		root * /media
 		file_server

@@ -37,4 +37,4 @@ Cross-content references, using Zola's internal link syntax
 - [work reference](@/work/reference.md)
 - [projects reference](@/projects/reference.md)
 - [library reference](@/library/reference.md)
-- [travel reference](@/travel/reference.md)
+- [life reference](@/life/reference.md)

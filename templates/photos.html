@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} · {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description or config.description }}{% endblock description %}
+{% block path %}~{{ section.path | trim_end(pat="/") }}{% endblock path %}
+{% block container_class %} wide{% endblock container_class %}
+
+{% block content %}
+{% set data = load_data(path="_photos.json", required=false) %}
+<div class="section-page photos-page">
+  {% set title = section.title | lower %}
+  {% set path = "~" ~ (section.path | trim_end(pat="/")) %}
+  {% include "_section-header.html" %}
+
+  {% if section.description %}
+  <p class="section-description">{{ section.description }}</p>
+  {% endif %}
+
+  {% if data and data.years | length > 0 %}
+  {% set_global froms = [] %}
+  {% set_global all_tags = [] %}
+  {% for group in data.years %}{% for photo in group.photos %}
+    {% if photo.title and photo.title not in froms %}{% set_global froms = [...froms, photo.title] %}{% endif %}
+    {% for tag in photo.tags %}
+      {% if tag not in all_tags %}{% set_global all_tags = [...all_tags, tag] %}{% endif %}
+    {% endfor %}
+  {% endfor %}{% endfor %}
+
+  <div class="photo-filters">
+    <div class="photo-filter-row" data-key="from">
+      <span class="photo-filter-label">from</span>
+      <button class="photo-filter is-active" data-value="">all</button>
+      {% for t in froms %}<button class="photo-filter" data-value="{{ t }}">{{ t }}</button>{% endfor %}
+    </div>
+    <div class="photo-filter-row" data-key="tags">
+      <span class="photo-filter-label">tags</span>
+      <button class="photo-filter is-active" data-value="">all</button>
+      {% for t in all_tags | sort %}<button class="photo-filter" data-value="{{ t }}">{{ t }}</button>{% endfor %}
+    </div>
+  </div>
+
+  {% for group in data.years %}
+  <section class="photos-year-group">
+  <h2 class="photos-year">{{ group.year }}</h2>
+  <div class="photo-grid gallery">
+    {% for photo in group.photos %}
+    <img src="{{ photo.src | safe }}" alt="{{ photo.caption }}" loading="lazy"
+      data-title="{{ photo.title }}" data-tags="{{ photo.tags | join(sep=',') }}"
+      {% if photo.href %}data-href="{{ photo.href | safe }}"{% endif %}>
+    {% endfor %}
+  </div>
+  </section>
+  {% endfor %}
+  <p class="photos-empty" hidden>Nothing matches.</p>
+
+  <script>
+    (function() {
+      var active = { from: "", tags: "" };
+      var imgs = Array.from(document.querySelectorAll(".photos-page .gallery img"));
+      var groups = Array.from(document.querySelectorAll(".photos-year-group"));
+      var empty = document.querySelector(".photos-empty");
+
+      function matches(img, key, value) {
+        if (!value) return true;
+        if (key === "tags") return (img.dataset.tags || "").split(",").indexOf(value) !== -1;
+        return img.dataset.title === value;
+      }
+
+      function apply() {
+        imgs.forEach(function(img) {
+          img.hidden = !matches(img, "from", active.from) || !matches(img, "tags", active.tags);
+        });
+        groups.forEach(function(g) {
+          g.hidden = !g.querySelector("img:not([hidden])");
+        });
+        empty.hidden = imgs.some(function(img) { return !img.hidden; });
+        // Grey out chips that would produce no results given the other filter.
+        document.querySelectorAll(".photo-filter-row").forEach(function(row) {
+          var key = row.dataset.key, other = key === "from" ? "tags" : "from";
+          row.querySelectorAll(".photo-filter").forEach(function(btn) {
+            var v = btn.dataset.value;
+            btn.classList.toggle("is-active", v === active[key]);
+            btn.disabled = !!v && !imgs.some(function(img) {
+              return matches(img, key, v) && matches(img, other, active[other]);
+            });
+          });
+        });
+        var q = new URLSearchParams();
+        if (active.from) q.set("from", active.from);
+        if (active.tags) q.set("tags", active.tags);
+        history.replaceState(null, "", q.toString() ? "?" + q : location.pathname);
+      }
+
+      document.querySelectorAll(".photo-filter").forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          var key = btn.closest(".photo-filter-row").dataset.key;
+          active[key] = active[key] === btn.dataset.value ? "" : btn.dataset.value;
+          apply();
+        });
+      });
+
+      var q = new URLSearchParams(location.search);
+      active.from = q.get("from") || "";
+      active.tags = q.get("tags") || "";
+      apply();
+    })();
+  </script>
+  {% else %}
+  <p style="color: #a1a1aa; font-size: 0.875rem;">Nothing here yet.</p>
+  {% endif %}
+</div>
+{% endblock content %}
