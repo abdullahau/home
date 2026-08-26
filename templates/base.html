@@ -101,9 +101,7 @@
   </dialog>
 
   <script>
-    // Lightbox for images in post content and the /photos gallery. Caption is
-    // a <figcaption> (visible under the photo too) or, failing that, alt text
-    // (shown only here — a "hidden" caption).
+    // Lightbox for post content and the /photos gallery.
     (function() {
       var images = Array.from(document.querySelectorAll(".content img, .gallery img, .article-thumb"));
       var box = document.querySelector(".lightbox");
@@ -125,12 +123,8 @@
         var fig = img.closest("figure");
         var figcaptionText = fig && fig.querySelector("figcaption") ? fig.querySelector("figcaption").textContent : "";
         var inGallery = !!img.closest(".gallery");
-        // Main line: a visible <figcaption>, or (in the gallery, where every
-        // photo has exactly one caption regardless of how it was authored)
-        // the photo's alt. Secondary line: the page description (gallery),
-        // plus alt — unless alt is already showing as the main line (the
-        // gallery, alt-only case) — as a hidden/extra caption, styled
-        // small/grey like Ellie's exif line, alongside a figcaption too.
+        // Main: figcaption (or alt in the gallery). Secondary: description,
+        // else alt as a hidden caption.
         var mainText = figcaptionText || (inGallery ? img.alt : "");
         var altAlreadyShown = img.alt && mainText === img.alt;
         var secondaryText = img.dataset.description || (!altAlreadyShown ? img.alt : "");

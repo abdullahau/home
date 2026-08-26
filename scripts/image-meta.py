@@ -3,17 +3,11 @@
 # requires-python = ">=3.11"
 # dependencies = ["pillow"]
 # ///
-"""Annotate <img> tags in public/ with width/height and a --ar aspect-ratio
-style var, so .photo-grid can lay out justified rows without cropping and
-without layout shift while images load.
+"""Annotate <img> tags in the build output with width/height and an --ar var,
+so .photo-grid can lay out justified rows with no layout shift.
 
-Images live in the gitignored, VPS-only media/ directory (bind-mounted by
-Caddy, separate from public/) or in static/ (copied into public/ by Zola
-itself). Dimensions are cached once per URL in image-meta.json (gitignored,
-regenerated every build — see content/_git-dates.json for the same pattern).
-
-This site strips all EXIF at image-conversion time (see README.md's Images
-section), so there's no camera/orientation metadata to read here.
+/media/... resolves to the gitignored, VPS-only media/ dir; anything else to
+the build output. Dimensions cache in image-meta.json (gitignored).
 """
 import json
 import re
@@ -39,7 +33,7 @@ def resolve(url):
         return root / "media" / url[len("/media/"):]
     if url.startswith("/"):
         return public / url.lstrip("/")
-    return None  # relative path — not used by this site's flat content files
+    return None  # relative path — flat content files must use absolute ones
 
 
 def fetch(url):

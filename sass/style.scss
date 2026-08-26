@@ -928,17 +928,8 @@ footer {
   }
 }
 
-// Justified photo grid (Google Photos style). Usage in markdown:
-//
-//   <div class="photo-grid">
-//   <img src="…" alt="hidden caption" />
-//   <figure><img src="…" /><figcaption>visible caption</figcaption></figure>
-//   </div>
-//
-// Each image's aspect ratio is set as --ar (by scripts/image-meta.py at
-// build time, or by JS in base.html as a fallback for `zola serve`).
-// flex-basis and flex-grow are both proportional to --ar, so rows fill the
-// width exactly with every image at the same height and nothing cropped.
+// Justified photo grid (see README for authoring). --ar comes from
+// scripts/image-meta.py, or base.html's JS fallback under `zola serve`.
 .photo-grid {
   display: flex;
   flex-wrap: wrap;
@@ -951,9 +942,7 @@ footer {
     display: contents;
   }
 
-  // A caption for the whole grid (a direct-child <figcaption>, not one
-  // wrapped in its own <figure>): break onto its own full-width row below
-  // the images, instead of squeezing in as another flex item beside them.
+  // Grid-wide caption: own full-width row under the photos.
   > figcaption {
     flex: 1 0 100%;
     font-family: "JetBrains Mono", monospace;
@@ -982,13 +971,8 @@ footer {
     }
   }
 
-  // <figure> in a grid: the figure is the flex item (same --ar, set by the
-  // build step / JS on the figure). Giving the figure the aspect-ratio the
-  // photo would have had makes it size exactly like a plain <img> in the
-  // justified-row maths, so a captioned photo lines up with its neighbours
-  // instead of hanging below them. The caption then takes its space out of
-  // the photo (which crops slightly via object-fit) rather than adding to
-  // the figure's height.
+  // Figure carries the photo's --ar so it sizes like a plain <img> and rows
+  // stay flush; the caption's space is cropped off the photo, not added on.
   figure {
     --ar: 1.5;
     --row: 14rem;
@@ -1138,8 +1122,7 @@ body:has(.lightbox[open]) {
   }
 }
 
-// Lightbox: caption is a single muted line (figcaption/alt), plus an
-// optional "from: <post title>" link when browsing the /photos gallery.
+// Lightbox caption: main line, then "from:" link + description.
 .lightbox-caption {
   display: none;
   position: absolute;
@@ -1158,12 +1141,7 @@ body:has(.lightbox[open]) {
     display: block;
   }
 
-  // The main caption gets its own line, above the from/description line —
-  // they used to sit inline together, which read as one run-on line.
-  // font-family is re-declared here because the global `span { font-family }`
-  // reset (top of this file) always wins over inheriting it from
-  // .lightbox-caption — a real bug, also present on ellie.wtf's own site
-  // (confirmed by rendering her compiled CSS), not something new here.
+  // Own line. font-family repeated: the global `span` rule beats inheritance.
   span {
     display: block;
     margin-bottom: 0.25rem;

@@ -4,21 +4,9 @@
 # ///
 """Collect photos from content/life/ into content/_photos.json for /photos.
 
-Unlike a general per-page photo-grid (any page can use one — see the
-figure/figcaption convention documented in CLAUDE.md), the /photos gallery
-itself only draws from content/life/*.md: other sections carry diagrams,
-screenshots, and thumbnails, not photos. hidden pages (reference.md) and
-_index.md are skipped, same as everywhere else on the site.
-
-Every image in a life/ post's body counts — no opt-in tag needed, since the
-whole section is already photo content. A photo's caption is its
-<figcaption> text when it's wrapped in a <figure> (matching what's shown
-inline in the post), else its alt text (shown only in the lightbox).
-
-life/ front matter convention: `tags` is a high-level grouping, `title`
-grabs attention, `description` names the country/restaurant/place — so the
-gallery filters by `description`, not `tags` (tags are often shared across
-unrelated posts and aren't a useful gallery filter).
+life/ only: other sections hold diagrams and screenshots, not photos.
+_index.md and hidden reference.md are skipped. Caption is the <figcaption>,
+else alt. Filters use `description` (the place), not `tags` (too coarse).
 """
 import json
 import re
@@ -42,8 +30,7 @@ def strip_tags(s):
 
 
 def extract(body, title, date, description, href):
-    # Blank inline code spans first — a `![caption](src)` shown as a syntax
-    # example in prose isn't an embedded photo.
+    # Blank inline code: a `![x](y)` shown as an example isn't a real photo.
     body = INLINE_CODE.sub(lambda m: " " * len(m.group(0)), body)
 
     photos = []
@@ -56,7 +43,7 @@ def extract(body, title, date, description, href):
                                 title=title, date=date, description=description, href=href))
         consumed.append((m.start(), m.end()))
 
-    # Blank out matched <figure> spans so the img inside isn't double-counted.
+    # Blank matched <figure> spans so their img isn't counted twice.
     remainder = body
     for start, end in sorted(consumed, reverse=True):
         remainder = remainder[:start] + " " * (end - start) + remainder[end:]
