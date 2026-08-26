@@ -983,11 +983,19 @@ footer {
   }
 
   // <figure> in a grid: the figure is the flex item (same --ar, set by the
-  // build step / JS on the figure), image fills it, caption sits underneath.
+  // build step / JS on the figure). Giving the figure the aspect-ratio the
+  // photo would have had makes it size exactly like a plain <img> in the
+  // justified-row maths, so a captioned photo lines up with its neighbours
+  // instead of hanging below them. The caption then takes its space out of
+  // the photo (which crops slightly via object-fit) rather than adding to
+  // the figure's height.
   figure {
     --ar: 1.5;
     --row: 14rem;
     flex: var(--ar) 1 calc(var(--ar) * var(--row));
+    aspect-ratio: var(--ar);
+    display: flex;
+    flex-direction: column;
     min-width: 0;
     margin: 0;
 
@@ -996,7 +1004,9 @@ footer {
     }
 
     img {
-      flex: none;
+      flex: 1 1 0;
+      min-height: 0;
+      aspect-ratio: auto;
       width: 100%;
       height: auto;
       object-fit: cover;
