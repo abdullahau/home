@@ -18,24 +18,22 @@
 
   {% if data and data.years | length > 0 %}
   {% set_global froms = [] %}
-  {% set_global all_tags = [] %}
+  {% set_global descriptions = [] %}
   {% for group in data.years %}{% for photo in group.photos %}
     {% if photo.title and photo.title not in froms %}{% set_global froms = [...froms, photo.title] %}{% endif %}
-    {% for tag in photo.tags %}
-      {% if tag not in all_tags %}{% set_global all_tags = [...all_tags, tag] %}{% endif %}
-    {% endfor %}
+    {% if photo.description and photo.description not in descriptions %}{% set_global descriptions = [...descriptions, photo.description] %}{% endif %}
   {% endfor %}{% endfor %}
 
   <div class="photo-filters">
     <div class="photo-filter-row" data-key="from">
       <span class="photo-filter-label">from</span>
       <button class="photo-filter is-active" data-value="">all</button>
-      {% for t in froms %}<button class="photo-filter" data-value="{{ t }}">{{ t }}</button>{% endfor %}
+      {% for t in froms %}<button class="photo-filter" data-value="{{ t }}" title="{{ t }}">{{ t }}</button>{% endfor %}
     </div>
-    <div class="photo-filter-row" data-key="tags">
-      <span class="photo-filter-label">tags</span>
+    <div class="photo-filter-row" data-key="description">
+      <span class="photo-filter-label">description</span>
       <button class="photo-filter is-active" data-value="">all</button>
-      {% for t in all_tags | sort %}<button class="photo-filter" data-value="{{ t }}">{{ t }}</button>{% endfor %}
+      {% for d in descriptions | sort %}<button class="photo-filter" data-value="{{ d }}" title="{{ d }}">{{ d }}</button>{% endfor %}
     </div>
   </div>
 
@@ -45,7 +43,7 @@
   <div class="photo-grid gallery">
     {% for photo in group.photos %}
     <img src="{{ photo.src | safe }}" alt="{{ photo.caption }}" loading="lazy"
-      data-title="{{ photo.title }}" data-tags="{{ photo.tags | join(sep=',') }}"
+      data-title="{{ photo.title }}" data-description="{{ photo.description }}"
       {% if photo.href %}data-href="{{ photo.href | safe }}"{% endif %}>
     {% endfor %}
   </div>
@@ -55,20 +53,19 @@
 
   <script>
     (function() {
-      var active = { from: "", tags: "" };
+      var active = { from: "", description: "" };
       var imgs = Array.from(document.querySelectorAll(".photos-page .gallery img"));
       var groups = Array.from(document.querySelectorAll(".photos-year-group"));
       var empty = document.querySelector(".photos-empty");
 
       function matches(img, key, value) {
         if (!value) return true;
-        if (key === "tags") return (img.dataset.tags || "").split(",").indexOf(value) !== -1;
-        return img.dataset.title === value;
+        return img.dataset[key] === value;
       }
 
       function apply() {
         imgs.forEach(function(img) {
-          img.hidden = !matches(img, "from", active.from) || !matches(img, "tags", active.tags);
+          img.hidden = !matches(img, "from", active.from) || !matches(img, "description", active.description);
         });
         groups.forEach(function(g) {
           g.hidden = !g.querySelector("img:not([hidden])");
@@ -76,7 +73,7 @@
         empty.hidden = imgs.some(function(img) { return !img.hidden; });
         // Grey out chips that would produce no results given the other filter.
         document.querySelectorAll(".photo-filter-row").forEach(function(row) {
-          var key = row.dataset.key, other = key === "from" ? "tags" : "from";
+          var key = row.dataset.key, other = key === "from" ? "description" : "from";
           row.querySelectorAll(".photo-filter").forEach(function(btn) {
             var v = btn.dataset.value;
             btn.classList.toggle("is-active", v === active[key]);
@@ -87,7 +84,7 @@
         });
         var q = new URLSearchParams();
         if (active.from) q.set("from", active.from);
-        if (active.tags) q.set("tags", active.tags);
+        if (active.description) q.set("description", active.description);
         history.replaceState(null, "", q.toString() ? "?" + q : location.pathname);
       }
 
@@ -101,7 +98,7 @@
 
       var q = new URLSearchParams(location.search);
       active.from = q.get("from") || "";
-      active.tags = q.get("tags") || "";
+      active.description = q.get("description") || "";
       apply();
     })();
   </script>

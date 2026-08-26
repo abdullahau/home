@@ -14,6 +14,11 @@ Every image in a life/ post's body counts — no opt-in tag needed, since the
 whole section is already photo content. A photo's caption is its
 <figcaption> text when it's wrapped in a <figure> (matching what's shown
 inline in the post), else its alt text (shown only in the lightbox).
+
+life/ front matter convention: `tags` is a high-level grouping, `title`
+grabs attention, `description` names the country/restaurant/place — so the
+gallery filters by `description`, not `tags` (tags are often shared across
+unrelated posts and aren't a useful gallery filter).
 """
 import json
 import re
@@ -36,7 +41,7 @@ def strip_tags(s):
     return re.sub(r'<[^>]+>', '', s).strip()
 
 
-def extract(body, title, date, tags, href):
+def extract(body, title, date, description, href):
     # Blank inline code spans first — a `![caption](src)` shown as a syntax
     # example in prose isn't an embedded photo.
     body = INLINE_CODE.sub(lambda m: " " * len(m.group(0)), body)
@@ -48,7 +53,7 @@ def extract(body, title, date, tags, href):
         s = SRC.search(m.group(1))
         if s:
             photos.append(dict(src=s.group(1), caption=strip_tags(m.group(2)),
-                                title=title, date=date, tags=tags, href=href))
+                                title=title, date=date, description=description, href=href))
         consumed.append((m.start(), m.end()))
 
     # Blank out matched <figure> spans so the img inside isn't double-counted.
@@ -58,7 +63,7 @@ def extract(body, title, date, tags, href):
 
     for m in MD_IMG.finditer(remainder):
         photos.append(dict(src=m.group(2), caption=m.group(1),
-                            title=title, date=date, tags=tags, href=href))
+                            title=title, date=date, description=description, href=href))
 
     for m in IMG.finditer(remainder):
         s = SRC.search(m.group(1))
@@ -66,7 +71,7 @@ def extract(body, title, date, tags, href):
             continue
         alt = ALT.search(m.group(1))
         photos.append(dict(src=s.group(1), caption=alt.group(1) if alt else "",
-                            title=title, date=date, tags=tags, href=href))
+                            title=title, date=date, description=description, href=href))
 
     return photos
 
@@ -87,9 +92,9 @@ for md in sorted(life.glob("*.md")):
     href = f"/life/{slug}/"
     title = fm_meta.get("title", "")
     date = str(fm_meta["date"])[:10]
-    tags = fm_meta.get("taxonomies", {}).get("tags", [])
+    description = fm_meta.get("description", "")
 
-    photos += extract(text[fm.end():], title, date, tags, href)
+    photos += extract(text[fm.end():], title, date, description, href)
 
 photos.sort(key=lambda p: p["date"], reverse=True)
 

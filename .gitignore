@@ -3,5 +3,5 @@ public.new
 media
 content/_git-dates.json
 content/_photos.json
-image-dims.json
+image-meta.json
 .DS_Store

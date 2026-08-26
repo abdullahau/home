@@ -7,4 +7,4 @@ serve:
     ./build.sh && zola serve
 
 clean:
-    rm -rf public content/_git-dates.json content/_photos.json image-dims.json
+    rm -rf public content/_git-dates.json content/_photos.json image-meta.json

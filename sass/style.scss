@@ -202,6 +202,7 @@ main {
     img {
       width: 100%;
       border-radius: 0.25rem;
+      object-fit: contain;
     }
   }
 
@@ -387,6 +388,7 @@ article {
     max-height: 20rem;
     width: auto;
     height: auto;
+    object-fit: contain;
     margin-left: auto;
     margin-right: auto;
     border-radius: 0.25rem;
@@ -578,6 +580,7 @@ article {
       max-width: 100%;
       border-radius: 0.25rem;
       margin: 1rem 0;
+      object-fit: contain;
     }
 
     hr {
@@ -926,6 +929,8 @@ footer {
     max-width: 100%;
     border-radius: 0.25rem;
     margin: 0;
+    // If --ar is ever wrong (bad source data), crop rather than stretch.
+    object-fit: cover;
 
     @media (max-width: 640px) {
       --row: 9rem;
@@ -949,6 +954,7 @@ footer {
       flex: none;
       width: 100%;
       height: auto;
+      object-fit: cover;
     }
 
     figcaption {
@@ -1019,6 +1025,13 @@ body:has(.lightbox[open]) {
     cursor: pointer;
     color: #a1a1aa;
     transition: color 0.2s;
+    // "from" chips are post titles (full sentences), not short camera-model
+    // names — keep them chip-sized instead of reading as inline prose.
+    max-width: 16rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
 
     &::before {
       content: "[";

@@ -9,7 +9,7 @@ without layout shift while images load.
 
 Images live in the gitignored, VPS-only media/ directory (bind-mounted by
 Caddy, separate from public/) or in static/ (copied into public/ by Zola
-itself). Dimensions are cached once per URL in image-dims.json (gitignored,
+itself). Dimensions are cached once per URL in image-meta.json (gitignored,
 regenerated every build — see content/_git-dates.json for the same pattern).
 
 This site strips all EXIF at image-conversion time (see README.md's Images
@@ -24,7 +24,7 @@ from PIL import Image
 
 root = Path(__file__).resolve().parent.parent
 public = root / (sys.argv[1] if len(sys.argv) > 1 else "public")
-cache_path = root / "image-dims.json"
+cache_path = root / "image-meta.json"
 cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
 
 IMG = re.compile(r'<img\b([^>]*?)\s*/?>')

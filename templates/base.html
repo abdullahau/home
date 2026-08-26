@@ -105,7 +105,7 @@
     // a <figcaption> (visible under the photo too) or, failing that, alt text
     // (shown only here — a "hidden" caption).
     (function() {
-      var images = Array.from(document.querySelectorAll(".content img, .gallery img"));
+      var images = Array.from(document.querySelectorAll(".content img, .gallery img, .article-thumb"));
       var box = document.querySelector(".lightbox");
       if (!images.length || !box || !box.showModal) return;
       var view = box.querySelector("img");
