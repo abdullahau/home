@@ -123,13 +123,21 @@
         var img = images[index];
         view.src = img.src;
         var fig = img.closest("figure");
-        var text = img.alt || (fig && fig.querySelector("figcaption") ? fig.querySelector("figcaption").textContent : "");
-        view.alt = text;
-        caption.textContent = text;
+        var figcaptionText = fig && fig.querySelector("figcaption") ? fig.querySelector("figcaption").textContent : "";
+        var inGallery = !!img.closest(".gallery");
+        // Main line: a visible <figcaption>, or (in the gallery, where every
+        // photo has exactly one caption regardless of how it was authored)
+        // the photo's alt. Secondary line: the page description (gallery),
+        // or — for regular content images — a hidden (alt-only, no
+        // figcaption) caption, styled small/grey like Ellie's exif line.
+        var mainText = figcaptionText || (inGallery ? img.alt : "");
+        var secondaryText = img.dataset.description || (!figcaptionText && !inGallery ? img.alt : "");
+        view.alt = mainText || img.alt;
+        caption.textContent = mainText;
         link.textContent = img.dataset.title ? "from: " + img.dataset.title : "";
         link.href = img.dataset.href || "";
-        description.textContent = img.dataset.description || "";
-        box.classList.toggle("has-caption", !!(text || img.dataset.href || img.dataset.description));
+        description.textContent = secondaryText;
+        box.classList.toggle("has-caption", !!(mainText || secondaryText || img.dataset.href));
         // Preload neighbours so arrowing through feels instant.
         [index + 1, index - 1].forEach(function(j) {
           new Image().src = images[(j + images.length) % images.length].src;

@@ -126,3 +126,61 @@ without touching pixel data:
 ```
 exiftool -all= -tagsFromFile @ -icc_profile:all -overwrite_original file.avif
 ```
+
+### Embedding images in post content
+
+Four patterns, all raw HTML in the markdown body (no shortcode) — pick
+whichever fits the image:
+
+**A normal photo.** Just an `<img>` (or plain markdown `![]()`), full width
+of the column:
+
+```html
+<img src="/media/life/trip/photo.avif" alt="Optional hidden caption" />
+```
+
+`alt` isn't shown inline — it only surfaces as a caption if the image is
+opened in the lightbox (see "Captions" below).
+
+**A justified photo grid** (`.photo-grid`) — for a run of photos from the
+same moment, packed into rows with no cropping:
+
+```html
+<div class="photo-grid">
+<img src="/media/life/trip/a.avif" />
+<img src="/media/life/trip/b.avif" alt="Hidden caption" />
+<figure>
+  <img src="/media/life/trip/c.avif" />
+  <figcaption>Visible caption</figcaption>
+</figure>
+</div>
+```
+
+Row heights and each image's aspect ratio (`--ar`) come from
+`scripts/image-meta.py` at build time — don't set `width`/`height`/`style`
+by hand here. Every image inside `content/life/*.md` also gets pulled into
+the `/photos` gallery automatically (see CLAUDE.md).
+
+**A tall (portrait) shot** (`img.tall-img`) — outside a grid, when a
+full-width portrait photo would run too tall. Caps the height and centers
+it instead of stretching to the column width:
+
+```html
+<img class="tall-img" src="/media/life/trip/portrait.avif" alt="…" />
+```
+
+**Two images side by side** (`.img-pair`) — a before/after or two related
+shots, capped height, stacking to one column on narrow screens:
+
+```html
+<div class="img-pair">
+<img src="/media/life/trip/left.avif" />
+<img src="/media/life/trip/right.avif" />
+</div>
+```
+
+**Captions.** Wrap an image in `<figure>…<figcaption>…</figcaption></figure>`
+for a caption shown under the photo *and* in the lightbox. Use a bare
+`alt="…"` (no `<figcaption>`) for a caption that's hidden inline and only
+shows up in the lightbox, styled small and grey like a footnote — good for
+a detail that's not worth breaking the flow of the post for.
