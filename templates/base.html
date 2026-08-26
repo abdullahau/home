@@ -128,10 +128,12 @@
         // Main line: a visible <figcaption>, or (in the gallery, where every
         // photo has exactly one caption regardless of how it was authored)
         // the photo's alt. Secondary line: the page description (gallery),
-        // or — for regular content images — a hidden (alt-only, no
-        // figcaption) caption, styled small/grey like Ellie's exif line.
+        // plus alt — unless alt is already showing as the main line (the
+        // gallery, alt-only case) — as a hidden/extra caption, styled
+        // small/grey like Ellie's exif line, alongside a figcaption too.
         var mainText = figcaptionText || (inGallery ? img.alt : "");
-        var secondaryText = img.dataset.description || (!figcaptionText && !inGallery ? img.alt : "");
+        var altAlreadyShown = img.alt && mainText === img.alt;
+        var secondaryText = img.dataset.description || (!altAlreadyShown ? img.alt : "");
         view.alt = mainText || img.alt;
         caption.textContent = mainText;
         link.textContent = img.dataset.title ? "from: " + img.dataset.title : "";

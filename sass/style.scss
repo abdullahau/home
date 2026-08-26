@@ -1057,13 +1057,6 @@ body:has(.lightbox[open]) {
     cursor: pointer;
     color: #a1a1aa;
     transition: color 0.2s;
-    // "from" chips are post titles (full sentences), not short camera-model
-    // names — keep them chip-sized instead of reading as inline prose.
-    max-width: 16rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: bottom;
 
     &::before {
       content: "[";
