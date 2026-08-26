@@ -1,17 +1,17 @@
 +++
-title = "Reference: travel"
+title = "Reference: life"
 date = 2026-01-01
-description = "Shows as a byline, and as the og:image/homepage thumbnail source"
+description = "Shows as a byline under the title, and feeds the page's og:description"
 hidden = true
 
 [extra]
-thumbnail = "/media/travel/reference/cover.avif"
+thumbnail = "/media/life/reference/cover.avif"
 
 [taxonomies]
 tags = ["tech"]
 +++
 
-Hidden reference page for the `travel` front matter and templates
+Hidden reference page for the `life` front matter and templates
 (`thumb-section.html` / default `page.html`). `extra.thumbnail` feeds the
 homepage/list thumbnail and `og:image`, but deliberately never renders as
 a heading image on this page — unlike `library`. See

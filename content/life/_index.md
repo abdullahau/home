@@ -1,8 +1,9 @@
 +++
-title = "Travel"
+title = "Life"
 sort_by = "date"
 template = "thumb-section.html"
-description = "Trip write-ups from places I've been."
+description = "Trips, food, hobbies, and everything else I get up to outside code."
+aliases = ["/travel/"]
 
 [extra]
 +++
