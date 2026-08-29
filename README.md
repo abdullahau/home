@@ -80,48 +80,34 @@ docker compose down
 
 ## Images
 
-To load images faster with the lowest memory footprint, use AVIF/WebP
-formats with appropriate quality compression and image sizing.
-
-Use [ImageMagick](https://imagemagick.org/) to convert image format, set
-the quality compression level, resize, and strip metadata, all in one
-command:
+Use AVIF or WebP. [ImageMagick](https://imagemagick.org/) converts,
+compresses, resizes, and strips metadata in one command:
 
 ```
 magick input.jpg -resize 'WxH>' -quality Q +profile 'exif,xmp,8bim,iptc' output.avif
 ```
 
-Its `-resize` geometry controls how width and height combine:
-
-- `WxH>` — fit inside a box of that width and height, aspect ratio
-  preserved (shrinks only, never crops, never upscales)
-- `Wx>` — cap the width only; height follows the aspect ratio
-  automatically
-
-Use `WxH>` for thumbnails, `Wx>` for images inside post content.
-
-**Thumbnails** (~1200x630 box):
+**Thumbnails** (fit a 1200x630 box):
 
 ```
 magick input.jpg -resize '1200x630>' -quality 50 +profile 'exif,xmp,8bim,iptc' output.avif
 ```
 
-**Body images** (~1600 wide):
+**Body images** (cap the width at 1600):
 
 ```
 magick input.jpg -resize '1600x>' -quality 50 +profile 'exif,xmp,8bim,iptc' output.avif
 ```
 
-`-quality 50` is the AVIF default used across this site. `+profile
-'exif,xmp,8bim,iptc'` strips camera/GPS/software metadata — phone photos
-carry exact GPS coordinates by default — while keeping the ICC color
-profile (`-strip` removes everything including that; iPhone photos are
-often tagged Display P3, not sRGB, so dropping it can shift colors on
-wide-gamut screens).
+`WxH>` fits the image inside a box. `Wx>` caps the width only. Both keep
+the aspect ratio and never upscale or crop.
 
-Already-converted AVIFs can't be re-stripped with ImageMagick without
-another lossy re-encode. Use `exiftool` instead, which edits metadata
-without touching pixel data:
+`-quality 50` is the site default. `+profile 'exif,xmp,8bim,iptc'` drops
+camera and GPS data but keeps the ICC color profile — don't use `-strip`,
+which removes the profile too and can shift colors.
+
+To strip an AVIF that is already converted, use `exiftool` — ImageMagick
+would re-encode it:
 
 ```
 exiftool -all= -tagsFromFile @ -icc_profile:all -overwrite_original file.avif
@@ -129,21 +115,16 @@ exiftool -all= -tagsFromFile @ -icc_profile:all -overwrite_original file.avif
 
 ### Embedding images in post content
 
-Four patterns, all raw HTML in the markdown body (no shortcode) — pick
-whichever fits the image:
+Four patterns, all raw HTML in the markdown body (no shortcode):
 
-**A normal photo.** Just an `<img>` (or plain markdown `![]()`), full width
-of the column:
+**A normal photo** — full width of the column:
 
 ```html
 <img src="/media/life/trip/photo.avif" alt="Optional hidden caption" />
 ```
 
-`alt` isn't shown inline — it only surfaces as a caption if the image is
-opened in the lightbox (see "Captions" below).
-
-**A justified photo grid** (`.photo-grid`) — for a run of photos from the
-same moment, packed into rows with no cropping:
+**A justified photo grid** (`.photo-grid`) — a run of photos packed into
+rows, no cropping:
 
 ```html
 <div class="photo-grid">
@@ -156,21 +137,19 @@ same moment, packed into rows with no cropping:
 </div>
 ```
 
-Row heights and each image's aspect ratio (`--ar`) come from
-`scripts/image-meta.py` at build time — don't set `width`/`height`/`style`
-by hand here. Every image inside `content/life/*.md` also gets pulled into
-the `/photos` gallery automatically (see CLAUDE.md).
+`scripts/image-meta.py` sets each image's aspect ratio (`--ar`) at build
+time — don't set `width`/`height`/`style` by hand. Every image in
+`content/life/*.md` also goes into the `/photos` gallery (see CLAUDE.md).
 
-**A tall (portrait) shot** (`img.tall-img`) — outside a grid, when a
-full-width portrait photo would run too tall. Caps the height and centers
-it instead of stretching to the column width:
+**A tall (portrait) shot** (`img.tall-img`) — caps the height and centers
+the image:
 
 ```html
 <img class="tall-img" src="/media/life/trip/portrait.avif" alt="…" />
 ```
 
-**Two images side by side** (`.img-pair`) — a before/after or two related
-shots, capped height, stacking to one column on narrow screens:
+**Two images side by side** (`.img-pair`) — capped height, stacks to one
+column on narrow screens:
 
 ```html
 <div class="img-pair">
@@ -179,8 +158,5 @@ shots, capped height, stacking to one column on narrow screens:
 </div>
 ```
 
-**Captions.** Wrap an image in `<figure>…<figcaption>…</figcaption></figure>`
-for a caption shown under the photo *and* in the lightbox. Use a bare
-`alt="…"` (no `<figcaption>`) for a caption that's hidden inline and only
-shows up in the lightbox, styled small and grey like a footnote — good for
-a detail that's not worth breaking the flow of the post for.
+**Captions.** A `<figure>`/`<figcaption>` caption shows under the photo and
+in the lightbox. A bare `alt="…"` shows only in the lightbox.
