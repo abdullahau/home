@@ -6,7 +6,7 @@ description = "Craig Coben"
 [extra]
 type = "Article"
 link = "https://www.ft.com/content/66df7f0e-ce6a-4619-8044-fa23423db3e7"
-thumbnail = "/media/library/shein-ip/thumbnail.avif"
+thumbnail = "/media/library/shein-ipo/thumbnail.avif"
 
 [taxonomies]
 tags = ["finance", "ipo", "venture-capital"]
