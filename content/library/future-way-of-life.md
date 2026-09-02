@@ -37,8 +37,9 @@ While we may not know the limits of our capacity to adapt, Toffler argues that i
 we must throw away our conception of time as relatively static and train ourselves to 
 speculate about the future with reasonable sense of accuracy.
 
+---
 
-Here are some thought-provoking quotes from the article:
+## Quotes from the article
 
 > In the past it was possible to know in advance what occupation would 
 > exist when a boy became a man. Today the life span of occupation has
@@ -73,3 +74,46 @@ Here are some thought-provoking quotes from the article:
 > If the contemporary individual is going to have to cope with the equivalent 
 > of millenniums of change within the compressed span of a single lifetime, 
 > he must carry within his skull a reasonably accurate (even if gross) image of the future.
+
+---
+
+## Notable statistics, figures, and comparisons
+
+**Energy consumption (Homi Bhabha's "Q" unit)**
+- One "Q" equals the energy from burning roughly 33 billion tons of coal.
+- For the first 18.5 centuries after Christ, consumption averaged under half a Q per century. By 1850 it had risen to one Q per century. By the time of writing, about ten Q per century.
+- The upshot: roughly half of all the energy humans consumed in the past 2,000 years was used in the last 100.
+
+**Mining and materials (Kenneth Boulding)**
+- The dividing line for metal and materials extraction sits around 1910. Humans took about as much out of mines before 1910 as after it.
+
+**Knowledge and information**
+- Around 15,000 significant journals worldwide, carrying perhaps a million significant papers a year (per Charles P. Bourne, Stanford Research Institute).
+- The total quantity of information was said to be doubling every ten years.
+
+**Population growth**
+- About 25% of all human beings who ever lived were alive at the time of writing, heading toward 50%.
+- Julian Huxley's figures: it took Homo sapiens at least 100,000 years to reach two-thirds of a billion people (by 1650). The next doubling took about 200 years, the one after that only 100 years, then it more than doubled again in the 64 years of that century.
+
+**Civilization stages (Boulding)**
+- Fewer than 5% of the world's population could still be classed as living in genuinely precivilized society.
+
+**Agriculture, past vs. present**
+- In ancient societies the food surplus rarely topped 20–25% of total product, forcing three-quarters to four-fifths of people into food production. Most classical cities sat within a few weeks of starvation.
+- In the modern US, only 10% of the population worked in agriculture yet produced a surplus. Boulding projected that figure dropping to 5% or less.
+
+**US labor shift**
+- By 1900 the non-farm labor force already outnumbered farm labor, and 57% of non-farm workers were blue-collar.
+- By 1960, more Americans wore white collars than blue for the first time.
+
+**Urbanization (Kingsley Davis)**
+- Projection that by 2000, a quarter of the world would live in cities of 100,000 or more, and by 2050, half the world's population.
+
+**Pace of change and obsolescence**
+- Long-lived brands like Ivory Soap, Calumet Baking Soda, and Smith Brothers' Cough Drops became institutions through decades on the shelf. Future products, he argued, would last only weeks or months.
+- The work week had already been cut by 50% since 1900, with a prediction it would halve again by 2000.
+- The computer programmer, first heard of in the 1950s, was predicted to go the way of the blacksmith, "perhaps by 1970."
+
+**Speed of scientific advance**
+- Less than 35 years separated Los Alamos and Hiroshima from Rutherford's basic discoveries about the atomic nucleus.
+- Margaret Mead's example: the Manus of New Guinea moved from Stone Age life into a 20th-century way of living within a single 25-year span.
