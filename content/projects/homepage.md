@@ -9,6 +9,9 @@ tags = ["tech"]
 
 Repo → [https://github.com/abdullahau/home](https://github.com/abdullahau/home)
 
+If you have ever tried to create a website on Squarespace, Wix, or Webflow, you will know the 
+limitations on customization and data models 
+
 - Meaning to create my own website to post blogs, notes, and watched/read list using as few a dependencies as possible. 
 - In particular I wanted to stay away from proprietary website builders or the entire JS/node/npm tool chain and stack
 - Given the purpose of the website, it made sense that I needed a static website as opposed to a dynamic site. There is simply no need for a CMS system
