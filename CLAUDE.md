@@ -23,7 +23,8 @@ Common commands (via `justfile`):
   `/photos` gallery's data, via `scripts/photos.py` — see "Photo grid,
   lightbox, and /photos" below), builds with Zola into a staging directory,
   runs `scripts/image-meta.py` against it (annotates every `<img>` with its
-  real width/height), then `rsync --delete`s the result into `public/`
+  real width/height), precompresses text assets (see "Compression" under
+  Hosting below), then `rsync --delete`s the result into `public/`
   instead of letting `zola build` replace that directory outright — Caddy's
   Docker container bind-mounts `public/`, and swapping the directory (vs.
   just its contents) breaks that mount out from under the running
@@ -295,7 +296,45 @@ never grow a "deploy to GitHub Pages" Actions workflow. Instead:
   either of those two files.
 - `/media/*` is routed (via `handle_path` in the Caddyfile) to the `media/`
   bind mount described under Content structure above, separately from the
-  `public/` one.
+  `public/` one. It gets its own `Cache-Control` of `public, max-age=2592000`
+  (30 days), set with `header @media >Cache-Control` — the `>` replaces the
+  4-hour value `@static` already matched on `*.avif`, instead of sending two
+  headers and letting the client pick. `media/` is write-once in practice (a
+  new photo gets a new path, nothing is edited in place) and holds the
+  heaviest bytes on the site, so the 4-hour window `@static` gives the rest
+  of the assets was simply wrong for it. Deliberately no `immutable`: if a
+  file *is* ever replaced at the same path, `immutable` would pin the old
+  copy in browsers that already have it for the full 30 days, and a
+  Cloudflare purge would not reach them. The `>` form also catches the
+  non-image files under `media/` (there's one `.excalidraw`), which matched
+  neither `@static` nor any image rule and so used to be served with the
+  HTML `max-age=0`.
+- **Compression.** `encode zstd gzip` handles anything served live; Caddy 2
+  cannot do Brotli on the fly at all (the Go encoder was too slow, so it was
+  dropped), it only serves Brotli from disk. So `build.sh` precompresses
+  every `.html`/`.css`/`.js`/`.svg`/`.xml`/`.json` over 1 KB into `.br`
+  (`brotli -q 11`), `.zst` (`zstd -19`), and `.gz` (`gzip -9`) siblings, and
+  `file_server { precompressed zstd br gzip }` serves those instead of
+  compressing per request. Two things to keep right:
+  - The compression step runs against `public.new/`, **before** the rsync,
+    never against `public/` after it — siblings written after the sync don't
+    exist in `public.new` and the next build's `rsync --delete` removes them.
+  - `precompressed` is a *block subdirective*. `file_server precompressed
+    zstd br gzip` on one line fails config validation ("wrong argument count
+    or unexpected line ending"); `file_server` only takes `browse` inline.
+
+  Images are untouched — AVIF/PNG/JPEG are already compressed, and Caddy's
+  `encode` skips them by Content-Type anyway. `brotli`/`zstd` come from brew;
+  `build.sh` warns and skips the step if either is missing rather than
+  failing the build. The three compressors run as one `sh -c` per file under
+  `xargs -0 -P "$(nproc)"`, not as three chained `find -exec`s: find treats
+  each `-exec` as a *test*, so a brotli failure would skip zstd and gzip for
+  that file and still exit 0 — a silently half-compressed build. `set -e`
+  inside the `sh -c` turns that into a real build failure, and the
+  parallelism makes the step about 3x faster (2.4s to 0.7s here). Note this
+  mostly saves the origin→Cloudflare hop: Cloudflare terminates the browser
+  connection and applies its own compression, so the visitor-facing win is
+  small next to edge-caching HTML.
 - The VPS already runs other services on this box (Tailscale, SSH, a Python
   dev environment on :8080) — ports 80/443 were confirmed free before
   adding this.
