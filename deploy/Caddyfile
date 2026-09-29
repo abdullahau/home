@@ -5,29 +5,24 @@ abdullah.run, abdullah.diy {
 	}
 	encode zstd gzip
 
-	# HTML always revalidates; assets get a short cache window (no
-	# cache-busting filenames here, so not longer). Matches ellie.wtf.
+	# No cache-busting filenames here, so assets get a short window, not a long one.
 	@static path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
 	@html not path *.css *.js *.svg *.avif *.png *.jpg *.jpeg *.pdf *.woff *.woff2
 	header @static Cache-Control "public, max-age=14400, must-revalidate"
 	header @html Cache-Control "public, max-age=0, must-revalidate"
 
-	# /media is write-once — a new photo gets a new path, never an edit in
-	# place — so 4 hours is far too short for the heaviest bytes on the site.
-	# `>` replaces the value @static just set instead of sending a second
-	# header. No `immutable`: replacing a file at the same path would then
-	# stick for 30 days in browsers that already have it.
+	# /media is write-once, so it caches far longer. `>` replaces the value @static
+	# set. No `immutable`: a same-path replace would then stick in browsers.
 	@media path /media/*
 	header @media >Cache-Control "public, max-age=2592000"
 
-	# Images/etc that live only on the VPS, outside the git repo
-	# /media/<content-type>/<page-name>/photo.jpg -> media/<content-type>/<page-name>/photo.jpg
+	# VPS-only, outside the git repo.
 	handle_path /media/* {
 		root * /media
 		file_server
 	}
 
-	# Serve the styled 404 page while keeping the real status code.
+	# Styled 404 page, real status code.
 	handle_errors {
 		rewrite * /404.html
 		file_server {
@@ -36,16 +31,14 @@ abdullah.run, abdullah.diy {
 	}
 }
 
-# Canonical host: www.* redirects to the apex. Cloudflare holds CNAMEs for both.
-# labels are right-to-left: labels.0=tld, labels.1=domain, labels.2=www
+# labels are right-to-left: 0=tld, 1=domain.
 www.abdullah.run, www.abdullah.diy {
 	redir https://{labels.1}.{labels.0}{uri} permanent
 }
 
-# Plex alias — raw relay on 32400 (vps/relay.sh) for Plex apps direct use
-# Plex server settings (Settings > Network):
-#   Custom server access URLs: https://plex.abdullah.run:443
-#   Secure connections: Preferred (not Required — blocks Caddy's cert)
+# Raw relay on 32400 (vps/relay.sh) for Plex apps. In Plex > Settings > Network:
+# custom access URL https://plex.abdullah.run:443, secure connections Preferred
+# (Required blocks Caddy's cert).
 plex.abdullah.run {
 	reverse_proxy 100.125.140.11:32400
 }
@@ -58,26 +51,21 @@ navidrome.abdullah.run {
 	reverse_proxy 100.125.140.11:4533
 }
 
-# textcast. Runs on this VPS, in ~/Developer/textcast, on the compose network
-# this file's own stack creates — so it is reached by container name and never
-# crosses the host, whose firewall rejects 8000 anyway.
+# Reached by container name on this stack's compose network. The host firewall
+# rejects 8000 anyway.
 textcast.abdullah.run {
 	reverse_proxy textcast-app:8000 {
-		# The article body is the page's entire HTML, which is megabytes on a
-		# news site. The default read timeout is generous, but say so.
+		# Article bodies are megabytes of HTML.
 		transport http {
 			read_timeout 300s
 		}
 	}
 
-	# A page of prose and a 30 MB Opus file. Compress the first, not the second.
+	# Compress the prose, not the 30 MB Opus file.
 	encode zstd gzip
 
-	# The app marks its media `public, immutable`, which is right for a browser
-	# and wrong in front of Cloudflare: the audio is behind the app's own login,
-	# and `public` invites a shared cache to keep it. `>` replaces the header
-	# rather than adding a second one — without it both went out and the answer
-	# was whichever the client read first.
+	# The app sends `public, immutable`, wrong in front of Cloudflare: the audio
+	# sits behind its own login. `>` replaces rather than adds a second header.
 	@media path /media/*
 	header @media >Cache-Control "private, max-age=31536000, immutable"
 }
