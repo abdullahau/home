@@ -36,21 +36,6 @@ www.abdullah.run, www.abdullah.diy {
 	redir https://{labels.1}.{labels.0}{uri} permanent
 }
 
-# Raw relay on 32400 (vps/relay.sh) for Plex apps. In Plex > Settings > Network:
-# custom access URL https://plex.abdullah.run:443, secure connections Preferred
-# (Required blocks Caddy's cert).
-plex.abdullah.run {
-	reverse_proxy 100.125.140.11:32400
-}
-
-jellyfin.abdullah.run {
-	reverse_proxy 100.125.140.11:8096
-}
-
-navidrome.abdullah.run {
-	reverse_proxy 100.125.140.11:4533
-}
-
 # Reached by container name on this stack's compose network. The host firewall
 # rejects 8000 anyway.
 textcast.abdullah.run {
@@ -69,6 +54,22 @@ textcast.abdullah.run {
 	@media path /media/*
 	header @media >Cache-Control "private, max-age=31536000, immutable"
 }
+
+# Raw relay on 32400 (vps/relay.sh) for Plex apps. In Plex > Settings > Network:
+# custom access URL https://plex.abdullah.run:443, secure connections Preferred
+# (Required blocks Caddy's cert).
+plex.abdullah.run {
+	reverse_proxy 100.125.140.11:32400
+}
+
+navidrome.abdullah.run {
+	reverse_proxy 100.125.140.11:4533
+}
+
+# jellyfin.abdullah.run {
+# 	reverse_proxy 100.125.140.11:8096
+# }
+
 
 # Fallback bare-IP block — uncomment if the domains ever break.
 # :80 {
